@@ -1,0 +1,29 @@
+---
+exclude: >-
+  (^|/)\.git($|/)|(^|/)\.tox($|/)|^docs($|/)|(^|/)migrations($|/)
+default_stages: [commit]
+fail_fast: true
+
+repos:
+  - repo: https://github.com/pycqa/isort
+    rev: 5.3.2
+    hooks:
+      - id: isort
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        description: Run Black code formatting on python files.
+        entry: black
+        args: [--config=pyproject.toml]
+        require_serial: true
+        language: system
+        types: [python]
+
+      - id: pylama
+        name: pylama
+        description: Run pylama code linting on python files.
+        entry: pylama
+        args: [--options=setup.cfg]
+        language: python
+        types: [python]
