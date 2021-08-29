@@ -597,6 +597,17 @@ gitdb = ">=4.0.1,<5"
 typing-extensions = {version = ">=3.7.4.3", markers = "python_version < \"3.10\""}
 
 [[package]]
+name = "google"
+version = "3.0.0"
+description = "Python bindings to the Google search engine."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+beautifulsoup4 = "*"
+
+[[package]]
 name = "google-api-core"
 version = "1.31.2"
 description = "Google API client core library"
@@ -724,6 +735,18 @@ google-crc32c = ">=1.0,<2.0dev"
 [package.extras]
 aiohttp = ["aiohttp (>=3.6.2,<4.0.0dev)"]
 requests = ["requests (>=2.18.0,<3.0.0dev)"]
+
+[[package]]
+name = "google-streetview"
+version = "1.2.9"
+description = "A command line tool and module for Google Street View Image API."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+kwconfig = "*"
+requests = "*"
 
 [[package]]
 name = "googleapis-common-protos"
@@ -1135,6 +1158,14 @@ description = "A fast implementation of the Cassowary constraint solver"
 category = "main"
 optional = false
 python-versions = ">=3.7"
+
+[[package]]
+name = "kwconfig"
+version = "1.1.7"
+description = "A Python module for managing config files in keyword style json format."
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "libpysal"
@@ -2365,7 +2396,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "d82b4af235425cac28b5661ec76faf467f920752847432e6186605cbc939eb71"
+content-hash = "f27f8c1a07859fd8a97680136abd9961be79b11fd9d27e583ac3dc3b14ff53a5"
 
 [metadata.files]
 alembic = [
@@ -2749,6 +2780,10 @@ gitpython = [
     {file = "GitPython-3.1.20-py3-none-any.whl", hash = "sha256:b1e1c269deab1b08ce65403cf14e10d2ef1f6c89e33ea7c5e5bb0222ea593b8a"},
     {file = "GitPython-3.1.20.tar.gz", hash = "sha256:df0e072a200703a65387b0cfdf0466e3bab729c0458cf6b7349d0e9877636519"},
 ]
+google = [
+    {file = "google-3.0.0-py2.py3-none-any.whl", hash = "sha256:889cf695f84e4ae2c55fbc0cfdaf4c1e729417fa52ab1db0485202ba173e4935"},
+    {file = "google-3.0.0.tar.gz", hash = "sha256:143530122ee5130509ad5e989f0512f7cb218b2d4eddbafbad40fd10e8d8ccbe"},
+]
 google-api-core = [
     {file = "google-api-core-1.31.2.tar.gz", hash = "sha256:8500aded318fdb235130bf183c726a05a9cb7c4b09c266bd5119b86cdb8a4d10"},
     {file = "google_api_core-1.31.2-py2.py3-none-any.whl", hash = "sha256:384459a0dc98c1c8cd90b28dc5800b8705e0275a673a7144a513ae80fc77950b"},
@@ -2807,6 +2842,9 @@ google-crc32c = [
 google-resumable-media = [
     {file = "google-resumable-media-2.0.0.tar.gz", hash = "sha256:094c0381734649ac939083ea3833bd239b7fba904d246342d1268984029f2167"},
     {file = "google_resumable_media-2.0.0-py2.py3-none-any.whl", hash = "sha256:c65f9e08a4fe1df532138c8f00eeafcd7fe0d4db35dff70d7428b6ea659b2888"},
+]
+google-streetview = [
+    {file = "google_streetview-1.2.9.tar.gz", hash = "sha256:f124982c4e16a7e15688e875928a227368739d12a07d2db2d2fdd0767edcc38d"},
 ]
 googleapis-common-protos = [
     {file = "googleapis-common-protos-1.53.0.tar.gz", hash = "sha256:a88ee8903aa0a81f6c3cec2d5cf62d3c8aa67c06439b0496b49048fb1854ebf4"},
@@ -3008,6 +3046,9 @@ kiwisolver = [
     {file = "kiwisolver-1.3.2-pp37-pypy37_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:25405f88a37c5f5bcba01c6e350086d65e7465fd1caaf986333d2a045045a223"},
     {file = "kiwisolver-1.3.2-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:bcadb05c3d4794eb9eee1dddf1c24215c92fb7b55a80beae7a60530a91060560"},
     {file = "kiwisolver-1.3.2.tar.gz", hash = "sha256:fc4453705b81d03568d5b808ad8f09c77c47534f6ac2e72e733f9ca4714aa75c"},
+]
+kwconfig = [
+    {file = "kwconfig-1.1.7.tar.gz", hash = "sha256:735b3cb21198f4bd2acaff7dcae97b3b0fcb765d73234a0afa635f94e9298e5f"},
 ]
 libpysal = [
     {file = "libpysal-4.5.1-py3-none-any.whl", hash = "sha256:42cd114b998447cc0c100598ce50d82569672bd0a7f727233c689063b2485400"},
