@@ -19,6 +19,7 @@ class DataConfig:
     YEAR_END: int = 2021
     MON_END: int = 8
     DATE_END: int = 22
+    PLACE = "Port-au-Prince, Haiti"
 
     BASE_FOLDER = "/ee_data"
 

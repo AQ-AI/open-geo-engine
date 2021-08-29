@@ -5,23 +5,28 @@ import ee
 import bootstrap  # noqa
 from config.model_settings import DataConfig, OSMConfig
 from src.load_ee_data import LoadEEData
-from src.generate_biilding_centroids import GenerateBuildingCentroids
+from src.generate_building_centroids import GenerateBuildingCentroids
 
 # from cli.load_ee_cli import load_data_options
 
 
 class LoadDataFlow:
     def __init__(self):
-        self.settings = DataConfig
+        self.config = DataConfig()
 
     def execute(self):
         # Trigger the authentication flow.
         ee.Authenticate()
-
-        config = DataConfig()
-        data_loader = LoadEEData.from_dataclass_config(config)
+        data_loader = LoadEEData.from_dataclass_config(self.config)
 
         data_loader.execute()
+
+    def execute_for_country(self, building_footprint_gdf):
+        # Trigger the authentication flow.
+        ee.Authenticate()
+        data_loader = LoadEEData.from_dataclass_config(self.config)
+
+        return data_loader.execute_for_country(building_footprint_gdf)
 
 
 class GenerateBuildingCentroidsFlow:
@@ -36,10 +41,10 @@ class GenerateBuildingCentroidsFlow:
             data_config, osm_config
         )
 
-        data_loader.execute()
+        return data_loader.execute()
 
 
-@click.command("generate_biilding_centroids", help="Retrieve building centroids")
+@click.command("generate_building_centroids", help="Retrieve building centroids")
 def generate_building_centroids():
     GenerateBuildingCentroidsFlow().execute()
 
@@ -49,7 +54,17 @@ def load_data():
     LoadDataFlow().execute()
 
 
-@click.group("reinventing-catastrophe-modelling", help="Run full analysis pipeline")
+@click.command("run_pipeline", help="Run full analysis pipeline")
+def run_full_pipeline():
+    building_footprint_gdf = GenerateBuildingCentroidsFlow().execute()
+    time_series_df = LoadDataFlow().execute_for_country(building_footprint_gdf)
+    print(time_series_df)
+
+
+@click.group(
+    "reinventing-catastrophe-modelling",
+    help="Library aiming to reinvent catastrophe modelling using a combination of satellite data and urban analytics techniques",
+)
 @click.pass_context
 def cli(ctx):
     ...
@@ -57,6 +72,7 @@ def cli(ctx):
 
 cli.add_command(generate_building_centroids)
 cli.add_command(load_data)
+cli.add_command(run_full_pipeline)
 
 if __name__ == "__main__":
     cli()
