@@ -1,7 +1,16 @@
+import os
 from dataclasses import field
 from typing import Dict, Tuple, Sequence
 from pydantic.dataclasses import dataclass
 from pydantic import StrictStr
+
+
+@dataclass
+class StreetViewConfig:
+    SIZE: str = "600x300"
+    HEADING: str = "151.78"
+    PITCH: str = "-0.76"
+    KEY = os.environ.get("GOOGLE_DEV_API_KEY")
 
 
 @dataclass
