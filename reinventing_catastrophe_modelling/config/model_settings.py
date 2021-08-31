@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 from dataclasses import field
 from typing import Dict, Tuple, Sequence
 from pydantic.dataclasses import dataclass
@@ -5,22 +8,38 @@ from pydantic import StrictStr
 
 
 @dataclass
+class StreetViewConfig:
+    SIZE: str = "600x300"
+    HEADING: str = "151.78"
+    PITCH: str = "-0.76"
+    KEY = os.environ.get("GOOGLE_DEV_API_KEY")
+    LOCAL_IMAGE_FOLDER: str = (
+        f"{Path(__file__).resolve().parent.parent.parent}/local_data/streetview_images"
+    )
+    LOCAL_LINKS_FOLDER: str = (
+        f"{Path(__file__).resolve().parent.parent.parent}/local_data/streetview_links"
+    )
+    LOCAL_METADATA_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent}/local_data/streetview_metadata"
+    PLACE = "Santo_Domingo_Dominican_Republic"
+    META_BASE = "https://maps.googleapis.com/maps/api/streetview/metadata?"
+
+
+@dataclass
 class OSMConfig:
     TAGS = {"building": True}
-    PLACE = "Port-au-Prince, Haiti"
+    PLACE = "Santo Domingo, Dominican Republic"
 
 
 @dataclass
 class DataConfig:
-    COUNTRY_CODES = ["HT"]
+    COUNTRY_CODES = ["DO"]
     YEAR: int = 2020
     MON_START: int = 1
     DATE_START: int = 1
     YEAR_END: int = 2021
     MON_END: int = 8
     DATE_END: int = 22
-    PLACE = "Port-au-Prince, Haiti"
-
+    PLACE = "Santo Domingo, Dominican Republic"
     BASE_FOLDER = "/ee_data"
 
     LANDSAT_IMAGE_COLLECTION: str = "LANDSAT/LC08/C01/T1"
