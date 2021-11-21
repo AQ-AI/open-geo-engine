@@ -34,13 +34,15 @@ git clone https://github.com/ChristinaLast/reinventing-catastrophe-modelling.git
 3. Export the environmental variables using
 
 ```
-source .env
+$ cd <local-path>reinventing-catastrophe-modelling
+$ source .env
+# Run this command to reactivate your shell
+$ source ~/.bashrc
 ```
 
 4. Initialise the poetry environment using `poetry init`, ([docs](https://python-poetry.org/docs/basic-usage/#initialising-a-pre-existing-project) for installation instructions)
 
 ```
-$ cd <local-path>reinventing-catastrophe-modelling
 $ poetry init
 $ poetry shell
 ```
@@ -48,16 +50,16 @@ $ poetry shell
 5. Build the CLI locally using:
 
 ```
-python setup.py develop
+$ python setup.py develop
 ```
 
 6. To see the functions available in the CLI
 ```
-reinventing-catastrophe-modelling --help
+$ reinventing-catastrophe-modelling --help
 ```
 
 7. Test the full pipeline works with the default settings
 
 ```
-reinventing-catastrophe-modelling run_pipeline
+$ reinventing-catastrophe-modelling run_pipeline
 ```
