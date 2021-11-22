@@ -1,4 +1,4 @@
-# :wave: Reinventing catastrophe modelling
+# :ocean: Reinventing catastrophe modelling
 
 ## Introduction
 This library aims to develop an approach to catastrophe modelling that combines satellite imagery analysis and geospatial data science.
