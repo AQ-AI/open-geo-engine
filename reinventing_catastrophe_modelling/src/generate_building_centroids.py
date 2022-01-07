@@ -20,7 +20,7 @@ class GenerateBuildingCentroids:
     ) -> "GenerateBuildingCentroids":
         countries = []
         for country in data_config.COUNTRY_CODES:
-            country_info = data_config.COUNTRY_BOUNDING_BOXES.get(country, "WO")
+            country_info = data_config.COUNTRY_BOUNDING_BOXES.get(country, "IQ")
             countries.append(country_info)
 
         return cls(countries=countries, place=osm_config.PLACE, tags=osm_config.TAGS)
