@@ -26,6 +26,8 @@ hydra-core = "^1.1.1"
 earthengine-api = "^0.1.280"
 setuptools = "^57.4.0"
 osmnx = "^1.1.1"
+google = "^3.0.0"
+google-streetview = "^1.2.9"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

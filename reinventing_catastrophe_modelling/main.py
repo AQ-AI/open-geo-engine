@@ -3,11 +3,25 @@ import click
 import ee
 
 import bootstrap  # noqa
-from config.model_settings import DataConfig, OSMConfig
+from config.model_settings import DataConfig, OSMConfig, StreetViewConfig
 from src.load_ee_data import LoadEEData
 from src.generate_building_centroids import GenerateBuildingCentroids
+from src.get_google_streetview import GetGoogleStreetView
 
-# from cli.load_ee_cli import load_data_options
+
+class GenerateBuildingCentroidsFlow:
+    def __init__(self):
+        self.data_settings = DataConfig
+        self.osm_settings = OSMConfig
+
+    def execute(self):
+        data_config = DataConfig()
+        osm_config = OSMConfig()
+        building_generator = GenerateBuildingCentroids.from_dataclass_config(
+            data_config, osm_config
+        )
+
+        return building_generator.execute()
 
 
 class LoadDataFlow:
@@ -29,19 +43,25 @@ class LoadDataFlow:
         return data_loader.execute_for_country(building_footprint_gdf)
 
 
-class GenerateBuildingCentroidsFlow:
+class GetGoogleStreetViewFlow:
     def __init__(self):
-        self.data_settings = DataConfig
-        self.osm_settings = OSMConfig
+        self.streetview_config = StreetViewConfig()
 
     def execute(self):
-        data_config = DataConfig()
-        osm_config = OSMConfig()
-        data_loader = GenerateBuildingCentroids.from_dataclass_config(
-            data_config, osm_config
+        streetview_downloader = GetGoogleStreetView.from_dataclass_config(
+            self.streetview_config
         )
 
-        return data_loader.execute()
+        return streetview_downloader.execute()
+
+    def execute_for_country(self, satellite_data_df):
+        # Trigger the authentication flow.
+        ee.Authenticate()
+        streetview_downloader = GetGoogleStreetView.from_dataclass_config(
+            self.streetview_config
+        )
+
+        return streetview_downloader.execute_for_country(satellite_data_df)
 
 
 @click.command("generate_building_centroids", help="Retrieve building centroids")
@@ -54,11 +74,19 @@ def load_data():
     LoadDataFlow().execute()
 
 
+@click.command(
+    "get_google_streetview", help="Retrieve streetview images for building locations"
+)
+def get_google_streetview():
+    GetGoogleStreetViewFlow().execute()
+
+
 @click.command("run_pipeline", help="Run full analysis pipeline")
 def run_full_pipeline():
     building_footprint_gdf = GenerateBuildingCentroidsFlow().execute()
-    time_series_df = LoadDataFlow().execute_for_country(building_footprint_gdf)
-    print(time_series_df)
+    satellite_data_df = LoadDataFlow().execute_for_country(building_footprint_gdf)
+    print(satellite_data_df)
+    GetGoogleStreetViewFlow().execute_for_country(satellite_data_df)
 
 
 @click.group(
@@ -72,6 +100,7 @@ def cli(ctx):
 
 cli.add_command(generate_building_centroids)
 cli.add_command(load_data)
+cli.add_command(get_google_streetview)
 cli.add_command(run_full_pipeline)
 
 if __name__ == "__main__":

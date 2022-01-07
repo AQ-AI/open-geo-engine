@@ -69,7 +69,7 @@ class LoadEEData:
         building_footprint_gdf = self._get_xy(building_footprint_gdf)
         building_footprints_satellite_list = []
         for lon, lat in zip(
-            building_footprint_gdf.x[:10], building_footprint_gdf.y[:10]
+            building_footprint_gdf.x, building_footprint_gdf.y
         ):
             # Initialize the library.
             ee.Initialize()
@@ -85,15 +85,6 @@ class LoadEEData:
                 ee_array_to_df(landsat_centroid_point, self.image_band)
             )
         return pd.concat(building_footprints_satellite_list)
-        # down_args = {
-        #     "image": img,
-        #     "region": area,
-        #     "folder": f"{self.folder}",
-        #     "description": f"{self.model_name}_{s_date}_{e_date}",
-        #     "scale": 10,
-        # }
-        # task = ee.batch.Export.image.toDrive(**down_args)
-        # task.start()
 
     def prepare_dates(self) -> Tuple[datetime.date, datetime.date]:
         start, end = self._generate_start_end_date()
