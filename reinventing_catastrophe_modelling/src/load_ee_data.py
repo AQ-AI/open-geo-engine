@@ -4,7 +4,6 @@ from joblib import Parallel, delayed
 import pandas as pd
 import ee
 
-import bootstrap  # noqa
 from config.model_settings import DataConfig
 from utils.utils import ee_array_to_df
 
@@ -69,7 +68,9 @@ class LoadEEData:
         print(f"Downloading {self.model_name} data for {self.place}")
         building_footprint_gdf = self._get_xy(building_footprint_gdf)
         building_footprints_satellite_list = []
-        for lon, lat in zip(building_footprint_gdf.x[:10], building_footprint_gdf.y[:10]):
+        for lon, lat in zip(
+            building_footprint_gdf.x[:10], building_footprint_gdf.y[:10]
+        ):
             # Initialize the library.
             ee.Initialize()
             centroid_point = ee.Geometry.Point(lon, lat)

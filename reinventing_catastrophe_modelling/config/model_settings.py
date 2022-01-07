@@ -5,22 +5,38 @@ from pydantic import StrictStr
 
 
 @dataclass
+class StreetViewConfig:
+    SIZE: str = "600x300"
+    HEADING: str = "151.78"
+    PITCH: str = "-0.76"
+    KEY = os.environ.get("GOOGLE_DEV_API_KEY")
+    LOCAL_IMAGE_FOLDER: str = (
+        f"{Path(__file__).resolve().parent.parent.parent}/local_data/streetview_images"
+    )
+    LOCAL_LINKS_FOLDER: str = (
+        f"{Path(__file__).resolve().parent.parent.parent}/local_data/streetview_links"
+    )
+    LOCAL_METADATA_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent}/local_data/streetview_metadata"
+    PLACE = "Iraq"
+    META_BASE = "https://maps.googleapis.com/maps/api/streetview/metadata?"
+
+
+@dataclass
 class OSMConfig:
-    TAGS = {"building": True}
-    PLACE = "Port-au-Prince, Haiti"
+    TAGS = {"power": "plant", "landuse": "industrial"}
+    PLACE = "Iraq"
 
 
 @dataclass
 class DataConfig:
-    COUNTRY_CODES = ["HT"]
-    YEAR: int = 2020
-    MON_START: int = 1
+    COUNTRY_CODES = ["IQ"]
+    YEAR: int = 2021
+    MON_START: int = 7
     DATE_START: int = 1
     YEAR_END: int = 2021
-    MON_END: int = 8
-    DATE_END: int = 22
-    PLACE = "Port-au-Prince, Haiti"
-
+    MON_END: int = 11
+    DATE_END: int = 21
+    PLACE = "Iraq"
     BASE_FOLDER = "/ee_data"
 
     LANDSAT_IMAGE_COLLECTION: str = "LANDSAT/LC08/C01/T1"
