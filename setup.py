@@ -37,7 +37,7 @@ install_requires = \
 
 setup_kwargs = {
     'name': 'reinventing-catastrophe-modelling',
-    'version': '0.1.0',
+    'version': '0.1.1',
     'entry_points': {"console_scripts": ["reinventing-catastrophe-modelling = reinventing_catastrophe_modelling.__main__:main"]},
     'description': '',
     'long_description': None,
