@@ -1,4 +1,3 @@
-import json
 from pathlib import Path
 import requests
 import google_streetview.api

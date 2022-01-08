@@ -66,7 +66,6 @@ class GetGoogleStreetViewFlow:
 @click.command("generate_building_centroids", help="Retrieve building centroids")
 def generate_building_centroids():
     building_footprint_gdf = GenerateBuildingCentroidsFlow().execute()
-    building_footprint_gdf.to_csv(f"{StreetViewConfig.PLACE}_oil_power_plant.csv")
 
 
 @click.command("load_data", help="Load data from Google Earth Engine")
