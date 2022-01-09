@@ -5,7 +5,7 @@ import osmnx as ox
 import pandas as pd
 import geopandas as gpd
 
-from config.model_settings import DataConfig, OSMConfig
+from reinventing_catastrophe_modelling.config.model_settings import DataConfig, OSMConfig
 
 
 class GenerateBuildingCentroids:

@@ -4,7 +4,7 @@ import google_streetview.api
 import google_streetview.helpers
 import pandas as pd
 
-from config.model_settings import StreetViewConfig
+from reinventing_catastrophe_modelling.config.model_settings import StreetViewConfig
 from utils.utils import write_csv
 
 
