@@ -61,3 +61,10 @@ reinventing-catastrophe-modelling --help
 ```
 reinventing-catastrophe-modelling run_pipeline
 ```
+
+8. Use the example notebooks to visualise the results of your analysis.
+To create a kernel from your virtual environment:
+`python -m ipykernel install --user --name venv --display-name "Revinventing Catastrophe Modelling Kernel"`
+
+Then launch your jupyter notebook using the command:
+`jupyter notebook`
