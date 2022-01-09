@@ -28,6 +28,7 @@ setuptools = "^57.4.0"
 osmnx = "^1.1.1"
 google = "^3.0.0"
 google-streetview = "^1.2.9"
+keplergl = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
