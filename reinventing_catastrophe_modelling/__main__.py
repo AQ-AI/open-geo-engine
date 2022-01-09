@@ -1,6 +1,7 @@
 import click
 import ee
 
+import geopandas as gpd
 import bootstrap  # noqa
 from config.model_settings import DataConfig, OSMConfig, StreetViewConfig
 from src.load_ee_data import LoadEEData
@@ -66,6 +67,7 @@ class GetGoogleStreetViewFlow:
 @click.command("generate_building_centroids", help="Retrieve building centroids")
 def generate_building_centroids():
     building_footprint_gdf = GenerateBuildingCentroidsFlow().execute()
+    building_footprint_gdf.to_csv(f"{StreetViewConfig.PLACE}_man_made_petroleum_well.csv")
 
 
 @click.command("load_data", help="Load data from Google Earth Engine")
@@ -83,8 +85,13 @@ def get_google_streetview():
 @click.command("run_pipeline", help="Run full analysis pipeline")
 def run_full_pipeline():
     building_footprint_gdf = GenerateBuildingCentroidsFlow().execute()
+    building_footprint_gdf.to_csv(f"{StreetViewConfig.PLACE}_man_made_petroleum_well.csv")
+
+    # building_footprint_gdf = gpd.read_file(f"{StreetViewConfig.PLACE}_man_made_petroleum_well.csv")
+    building_footprint_gdf.set_geometry("centroid_geometry")
     satellite_data_df = LoadDataFlow().execute_for_country(building_footprint_gdf)
-    GetGoogleStreetViewFlow().execute_for_country(satellite_data_df)
+    satellite_data_df.to_csv(f"{StreetViewConfig.PLACE}_CH4.csv")
+    # GetGoogleStreetViewFlow().execute_for_country(satellite_data_df)
 
 
 @click.group(
