@@ -68,9 +68,7 @@ class LoadEEData:
         print(f"Downloading {self.model_name} data for {self.place}")
         building_footprint_gdf = self._get_xy(building_footprint_gdf)
         building_footprints_satellite_list = []
-        for lon, lat in zip(
-            building_footprint_gdf.x, building_footprint_gdf.y
-        ):
+        for lon, lat in zip(building_footprint_gdf.x, building_footprint_gdf.y):
             # Initialize the library.
             ee.Initialize()
             centroid_point = ee.Geometry.Point(lon, lat)
