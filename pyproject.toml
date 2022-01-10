@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "reinventing-catastrophe-modelling"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = ["ChristinaLast <christina.last@outlook.com>"]
 
