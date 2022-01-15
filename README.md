@@ -1,10 +1,9 @@
-# :ocean: Reinventing catastrophe modelling
-
+# :ocean: Open Geo-Engine
 ## Introduction
-This library aims to develop an approach to catastrophe modelling that combines satellite imagery analysis and geospatial data science.
+This library aims to develop an approach to integrating open geospatial data that combines satellite imagery analysis and geospatial data science.
 
 ## :nerd_face: Why might you want to use this
-Catastrophe modelling relates natural disasters to future pay-outs. With the advent of climate change, however, nature is no longer behaving like it used to, and past data is becoming less predictive of future events. This project responds to this call for action to enable catastrophe modelling by bringing near-time satellite data measuring environmental and social phenomena alongside urban geospatial data. This project enables users to combine these disparate data sources together for timeseries analysis.
+Air pollution is a real-time phenomena, and understanding our changing exposure to airborn pollution allows us to understand its help implications. With urbanisation and industrialisation in full flow, past data is becoming less predictive of future events. This project responds to this call for action to enable air pollution modelling and predicitonby bringing near-time satellite data measuring environmental and social phenomena alongside urban geospatial data. This project enables users to combine these disparate data sources together for timeseries analysis.
 
 ### Workflow
 1. Retrieves building footprints and calculates their centroids using Open Street Map.
@@ -40,7 +39,7 @@ source .env
 4. Initialise the poetry environment using `poetry init`, ([docs](https://python-poetry.org/docs/basic-usage/#initialising-a-pre-existing-project) for installation instructions)
 
 ```
-$ cd <local-path>reinventing-catastrophe-modelling
+$ cd <local-path>open-geo-engine
 $ poetry init
 $ poetry shell
 ```
@@ -53,11 +52,11 @@ python setup.py develop
 
 6. To see the functions available in the CLI
 ```
-reinventing-catastrophe-modelling --help
+open-geo-engine --help
 ```
 
 7. Test the full pipeline works with the default settings
 
 ```
-reinventing-catastrophe-modelling run_pipeline
+open-geo-engine run_pipeline
 ```
