@@ -26,7 +26,7 @@ Air pollution is a real-time phenomena, and understanding our changing exposure 
 1. Clone this repository
 
 ```
-git clone https://github.com/ChristinaLast/reinventing-catastrophe-modelling.git
+git clone https://github.com/AQ-AI/open-geo-engine.git
 ```
 
 2. Fill in the required environmental variables in `.env.sample` and move to `.env`

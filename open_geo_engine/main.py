@@ -90,8 +90,8 @@ def run_full_pipeline():
 
 
 @click.group(
-    "reinventing-catastrophe-modelling",
-    help="Library aiming to reinvent catastrophe modelling using a combination of satellite data and urban analytics techniques",
+    "open-geo-engine",
+    help="Library aiming to integrate disparate satellite, and geospatial datasets for pollution modelling",
 )
 @click.pass_context
 def cli(ctx):

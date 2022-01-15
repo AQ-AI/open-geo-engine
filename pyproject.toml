@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "reinventing-catastrophe-modelling"
+name = "open-geo-engine"
 version = "0.1.0"
 description = ""
 authors = ["ChristinaLast <christina.last@outlook.com>"]
