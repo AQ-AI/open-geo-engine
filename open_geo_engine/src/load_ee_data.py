@@ -4,9 +4,8 @@ from joblib import Parallel, delayed
 import pandas as pd
 import ee
 
-import bootstrap  # noqa
-from config.model_settings import DataConfig
-from utils.utils import ee_array_to_df
+from open_geo_engine.config.model_settings import DataConfig
+from open_geo_engine.utils.utils import ee_array_to_df
 
 
 class LoadEEData:
@@ -69,9 +68,7 @@ class LoadEEData:
         print(f"Downloading {self.model_name} data for {self.place}")
         building_footprint_gdf = self._get_xy(building_footprint_gdf)
         building_footprints_satellite_list = []
-        for lon, lat in zip(
-            building_footprint_gdf.x, building_footprint_gdf.y
-        ):
+        for lon, lat in zip(building_footprint_gdf.x, building_footprint_gdf.y):
             # Initialize the library.
             ee.Initialize()
             centroid_point = ee.Geometry.Point(lon, lat)
@@ -93,8 +90,8 @@ class LoadEEData:
         return self._generate_dates(date_list)
 
     def _generate_start_end_date(self) -> Tuple[datetime.date, datetime.date]:
-        start = str(datetime.date(self.year, self.mon_start, self.date_start))
-        end = str(datetime.date(self.year_end, self.mon_end, self.date_end))
+        start = datetime.datetime(self.year, self.mon_start, self.date_start)
+        end = datetime.datetime(self.year_end, self.mon_end, self.date_end)
         return start, end
 
     def _date_range(self, start, end) -> Sequence[Any]:
