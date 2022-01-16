@@ -1,12 +1,11 @@
-import json
 from pathlib import Path
 import requests
 import google_streetview.api
 import google_streetview.helpers
 import pandas as pd
 
-from config.model_settings import StreetViewConfig
-from utils.utils import write_csv
+from open_geo_engine.config.model_settings import StreetViewConfig
+from open_geo_engine.utils.utils import write_csv
 
 
 class GetGoogleStreetView:
