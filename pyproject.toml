@@ -24,10 +24,11 @@ click-config-file = "^0.6.0"
 click-option-group = "^0.5.3"
 hydra-core = "^1.1.1"
 earthengine-api = "^0.1.280"
-setuptools = "^57.4.0"
+setuptools = "^60.5.0"
 osmnx = "^1.1.1"
 google = "^3.0.0"
 google-streetview = "^1.2.9"
+typing-extensions = "^4.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
