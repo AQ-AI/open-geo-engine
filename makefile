@@ -27,7 +27,7 @@ all: uninstall install clean
 install:
 	@echo -e "$(BOLD)installing $(PROJECT_NAME) $(PROJECT_VERSION)$(RESET)"
 	@echo -e -n "$(DIM)"
-	@pip install .
+	@pip install -e  .
 	@echo -e -n "$(RESET)"
 
 uninstall:
@@ -75,21 +75,21 @@ lint: lint-pylama lint-black isort
 
 lint-black:
 	@echo -e "linting with black.."
-	@pipenv run black . --line-length=100 --check --exclude /migrations
+	@poetry run black . --line-length=100 --check --exclude /.venv
 
 lint-pylama:
 	@echo -e "linting with pylama.."
-	@pipenv run pylama
+	@poetry run pylama  --skip .venv/*
 
 isort:
 	@echo -e "Sorting all imports.."
-	@pipenv run isort . --settings-path=setup.cfg
+	@poetry run isort . --settings-path=setup.cfg
 
 .PHONY: bandit
 
 bandit:
 	@echo -e "analysing code for security issues.."
-	@pipenv run bandit -r unicef-dssg -ll -ii
+	@poetry run bandit -r open-geo-engine -ll -ii
 
 test:
 	pytest -vv -s -vv tests/
@@ -98,4 +98,4 @@ test-db:
 	pytest -vv -s -vv tests/
 
 test-cov:
-	pytest -vv -s --cov=open-geo-engine --cov-report html
+	pytest --cov=open_geo_engine tests/ -vv
