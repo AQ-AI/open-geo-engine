@@ -67,13 +67,3 @@ def write_dataclass(dclass: object, path: str) -> None:
         f.write(
             json.dumps(dclass, indent=4, ensure_ascii=True, default=pydantic_encoder)
         )
-
-
-def parametrized(dec):
-    def layer(*args, **kwargs):
-        def repl(f):
-            return dec(f, *args, **kwargs)
-
-        return repl
-
-    return layer
