@@ -1,7 +1,3 @@
-import ee
-from pandas.util.testing import assert_frame_equal
-import pandas as pd
-
 from open_geo_engine.src.load_ee_data import LoadEEData
 from open_geo_engine.src.generate_building_centroids import GenerateBuildingCentroids
 

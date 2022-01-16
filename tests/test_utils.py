@@ -50,7 +50,15 @@ def test_ee_array_to_df():
             .filterDate(s_date, e_date)
         )
         landsat_centroid_point = collection.getRegion(centroid_point, 10).getInfo()
-        assert landsat_centroid_point[0] == ['id', 'longitude', 'latitude', 'time', 'B4', 'B3', 'B2']
+        assert landsat_centroid_point[0] == [
+            "id",
+            "longitude",
+            "latitude",
+            "time",
+            "B4",
+            "B3",
+            "B2",
+        ]
         building_footprints_satellite_list.append(
             ee_array_to_df(landsat_centroid_point, image_band)
         )
