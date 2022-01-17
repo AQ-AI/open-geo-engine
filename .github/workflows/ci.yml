@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
         python-version: [3.8]
 
     runs-on: ${{ matrix.os }}
@@ -43,7 +43,7 @@ jobs:
 
       - name: Run tests
         run: |
-          python -m pytest -vvv
+          poetry run pytest --cov=open_geo_engine tests/ -vv --disable-warnings
 
   python-formatting:
     runs-on: ubuntu-latest
@@ -65,7 +65,7 @@ jobs:
 
       - name: Format Python files with black
         run: |
-          black --check .
+          poetry run black . --line-length=100 --check --exclude /.venv
 
   python-linting:
     runs-on: ubuntu-latest
@@ -87,4 +87,4 @@ jobs:
 
       - name: Lint Python files with flake8
         run: |
-          flake8 --ignore=E501,W503,W605 open_geo_engine/
+          poetry run flake8 --ignore=E501,W503,W605 open_geo_engine/
