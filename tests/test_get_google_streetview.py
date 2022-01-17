@@ -36,14 +36,10 @@ def test_get_google_streetview():
     lat_lon_str = get_google_streetview.generate_lat_lon_string(satellite_data_df)
     params = get_google_streetview._generate_params(lat_lon_str)
 
-    satellite_data_df["lat_lon_str"] = get_google_streetview._join_lat_lon(
-        satellite_data_df
-    )
+    satellite_data_df["lat_lon_str"] = get_google_streetview._join_lat_lon(satellite_data_df)
     assert satellite_data_df["lat_lon_str"][0] == str(lat_lon_str)
     assert (
-        get_google_streetview.add_metadata_to_satellite_df(satellite_data_df)[
-            "metadata"
-        ][0]
+        get_google_streetview.add_metadata_to_satellite_df(satellite_data_df)["metadata"][0]
         == "<Response [200]>"
     )
 

@@ -43,7 +43,7 @@ jobs:
 
       - name: Run tests
         run: |
-          poetry run pytest --cov=open_geo_engine tests/ -vv --disable-warnings
+          pytest --cov-report term-missing --cov=myproj tests/
 
   python-formatting:
     runs-on: ubuntu-latest
