@@ -26,7 +26,7 @@ class StreetViewConfig:
 
 @dataclass
 class OSMConfig:
-    TAGS = {"building": True}
+    TAGS = {"building": "school"}
     PLACE = "Santo Domingo, Dominican Republic"
 
 

@@ -1,24 +1,24 @@
-from typing import Optional
 import click
 import ee
 
-import bootstrap  # noqa
-from config.model_settings import DataConfig, OSMConfig, StreetViewConfig
-from src.load_ee_data import LoadEEData
-from src.generate_building_centroids import GenerateBuildingCentroids
-from src.get_google_streetview import GetGoogleStreetView
+from open_geo_engine.config.model_settings import (
+    DataConfig,
+    OSMConfig,
+    StreetViewConfig,
+)
+from open_geo_engine.src.load_ee_data import LoadEEData
+from open_geo_engine.src.generate_building_centroids import GenerateBuildingCentroids
+from open_geo_engine.src.get_google_streetview import GetGoogleStreetView
 
 
 class GenerateBuildingCentroidsFlow:
     def __init__(self):
-        self.data_settings = DataConfig
-        self.osm_settings = OSMConfig
+        self.data_settings = DataConfig()
+        self.osm_settings = OSMConfig()
 
     def execute(self):
-        data_config = DataConfig()
-        osm_config = OSMConfig()
         building_generator = GenerateBuildingCentroids.from_dataclass_config(
-            data_config, osm_config
+            self.data_settings, self.osm_settings
         )
 
         return building_generator.execute()
@@ -47,13 +47,6 @@ class GetGoogleStreetViewFlow:
     def __init__(self):
         self.streetview_config = StreetViewConfig()
 
-    def execute(self):
-        streetview_downloader = GetGoogleStreetView.from_dataclass_config(
-            self.streetview_config
-        )
-
-        return streetview_downloader.execute()
-
     def execute_for_country(self, satellite_data_df):
         # Trigger the authentication flow.
         ee.Authenticate()
@@ -77,15 +70,14 @@ def load_data():
 @click.command(
     "get_google_streetview", help="Retrieve streetview images for building locations"
 )
-def get_google_streetview():
-    GetGoogleStreetViewFlow().execute()
+def get_google_streetview(satellite_data_df):
+    GetGoogleStreetViewFlow().execute_for_country(satellite_data_df)
 
 
 @click.command("run_pipeline", help="Run full analysis pipeline")
 def run_full_pipeline():
     building_footprint_gdf = GenerateBuildingCentroidsFlow().execute()
     satellite_data_df = LoadDataFlow().execute_for_country(building_footprint_gdf)
-    print(satellite_data_df)
     GetGoogleStreetViewFlow().execute_for_country(satellite_data_df)
 
 
