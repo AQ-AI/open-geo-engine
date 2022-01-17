@@ -43,7 +43,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest --cov-report term-missing --cov=myproj tests/
+          poetry run pytest tests/ -vv --disable-warnings
 
   python-formatting:
     runs-on: ubuntu-latest
