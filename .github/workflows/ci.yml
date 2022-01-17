@@ -79,6 +79,12 @@ jobs:
         with:
           python-version: 3.8
 
+      - name: copy file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "tests/test_data/test_osm.csv"
+          target: "tests/test_data/test_osm.csv"
+
       - name: Install flake8
         run: |
           python -m pip install -U pip

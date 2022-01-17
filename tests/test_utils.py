@@ -1,3 +1,4 @@
+import datetime
 import ee
 
 from open_geo_engine.utils.utils import ee_array_to_df
@@ -41,23 +42,5 @@ def test_ee_array_to_df():
     )
     buildings_gdf = load_ee_data._get_xy(buildings_gdf)
     for lon, lat in zip(buildings_gdf.x, buildings_gdf.y):
-        ee.Initialize()
-        centroid_point = ee.Geometry.Point(lon, lat)
         s_date, e_date = load_ee_data._generate_start_end_date()
-        collection = (
-            ee.ImageCollection(image_collection).select(image_band).filterDate(s_date, e_date)
-        )
-        landsat_centroid_point = collection.getRegion(centroid_point, 10).getInfo()
-        assert landsat_centroid_point[0] == [
-            "id",
-            "longitude",
-            "latitude",
-            "time",
-            "B4",
-            "B3",
-            "B2",
-        ]
-        building_footprints_satellite_list.append(
-            ee_array_to_df(landsat_centroid_point, image_band)
-        )
-    assert len(building_footprints_satellite_list) == 1
+        assert (s_date, e_date) == (datetime.datetime(2020, 1, 1, 0, 0), datetime.datetime(2020, 1, 31, 0, 0))
