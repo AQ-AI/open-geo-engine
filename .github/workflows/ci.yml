@@ -87,4 +87,4 @@ jobs:
 
       - name: Lint Python files with flake8
         run: |
-          flake8 --ignore=E501,W503,W605 .
+          flake8 --ignore=E501,W503,W605 open_geo_engine/
