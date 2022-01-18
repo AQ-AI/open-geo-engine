@@ -59,11 +59,19 @@ def test_main_flow(OSMTestConfig, DataTestConfig):
     osm_config = OSMTestConfig()
     data_config = DataTestConfig()
     streetview_config = StreetviewTestConfig()
-    satellite_data_df = read_csv("tests/test_data/test_gee.csv")
-
-    generate_building_centroid_flow = GenerateBuildingCentroidsFlow(
-        osm_config, data_config
+    satellite_data_df = pd.DataFrame(
+        {
+            "longitude": [-3.683317243711068, -3.683317243711068],
+            "latitude": [40.41498005371624, 40.41498005371624],
+            "time": [1578653746335, 1580036142137],
+            "datetime": ["2020-01-10 10:55:46.335,", "2020-01-26 10:55:42.137"],
+            "B4": [7053, 6869],
+            "B3": [7177, 7069],
+            "B2": [7825, 7720],
+        }
     )
+
+    generate_building_centroid_flow = GenerateBuildingCentroidsFlow(osm_config, data_config)
     assert generate_building_centroid_flow().execute().shape == (1, 21)
     data_config = DataTestConfig()
 
@@ -71,10 +79,7 @@ def test_main_flow(OSMTestConfig, DataTestConfig):
     assert load_data_flow().execute().shape == (2, 7)
 
     get_google_streetview_flow = GetGoogleStreetViewFlow(streetview_config)
-    assert (
-        len(get_google_streetview_flow().execute_for_country(satellite_data_df).columns)
-        == 10
-    )
+    assert len(get_google_streetview_flow().execute_for_country(satellite_data_df).columns) == 10
 
 
 @pytest.fixture(

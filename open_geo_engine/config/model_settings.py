@@ -19,7 +19,9 @@ class StreetViewConfig:
     LOCAL_LINKS_FOLDER: str = (
         f"{Path(__file__).resolve().parent.parent.parent}/local_data/streetview_links"
     )
-    LOCAL_METADATA_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent}/local_data/streetview_metadata"
+    LOCAL_METADATA_FOLDER: str = (
+        f"{Path(__file__).resolve().parent.parent.parent}/local_data/streetview_metadata"
+    )
     PLACE = "Santo_Domingo_Dominican_Republic"
     META_BASE = "https://maps.googleapis.com/maps/api/streetview/metadata?"
 
@@ -44,9 +46,7 @@ class DataConfig:
 
     LANDSAT_IMAGE_COLLECTION: str = "LANDSAT/LC08/C01/T1"
     MODEL_NAME = "LANDSAT"
-    LANDSAT_IMAGE_BAND: Sequence[str] = field(
-        default_factory=lambda: ["B4", "B3", "B2"]
-    )
+    LANDSAT_IMAGE_BAND: Sequence[str] = field(default_factory=lambda: ["B4", "B3", "B2"])
 
     NIGHTTIME_LIGHT_IMAGE_COLLECTION: str = "NOAA/VIIRS/DNB/MONTHLY_V1/VCMCFG"
     NIGHTTIME_LIGHT_IMAGE_BAND: str = "avg_rad"
@@ -63,9 +63,7 @@ class DataConfig:
         ]
     )
 
-    POPULATION_IMAGE_COLLECTION: str = (
-        "CIESIN/GPWv411/GPW_Basic_Demographic_Characteristics"
-    )
+    POPULATION_IMAGE_COLLECTION: str = "CIESIN/GPWv411/GPW_Basic_Demographic_Characteristics"
     POPULATION_IMAGE_BAND = "basic_demographic_characteristics"
 
     LAND_COVER_IMAGE_COLLECTION: str = "COPERNICUS/Landcover/100m/Proba-V-C3/Global"

@@ -26,9 +26,9 @@ class GenerateBuildingCentroids:
         return cls(countries=countries, place=osm_config.PLACE, tags=osm_config.TAGS)
 
     def execute(self):
-        building_footprint_gdfs = Parallel(
-            n_jobs=-1, backend="multiprocessing", verbose=5
-        )(delayed(self.execute_for_country)(country) for country in self.countries)
+        building_footprint_gdfs = Parallel(n_jobs=-1, backend="multiprocessing", verbose=5)(
+            delayed(self.execute_for_country)(country) for country in self.countries
+        )
         return pd.concat(building_footprint_gdfs)
 
     def execute_for_country(self, country: str):
@@ -39,7 +39,5 @@ class GenerateBuildingCentroids:
 
     def get_representative_building_point(self) -> gpd.GeoDataFrame:
         building_footprints = self._get_boundaries_from_place()
-        building_footprints[
-            "centroid_geometry"
-        ] = building_footprints.representative_point()
+        building_footprints["centroid_geometry"] = building_footprints.representative_point()
         return building_footprints
