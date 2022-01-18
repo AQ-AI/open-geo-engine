@@ -47,6 +47,7 @@ def test_ee_array_to_df():
             )._get_xy(),
             buildings_gdf,
         )
+
         start, end = (
             datetime.datetime(2020, 1, 1, 0, 0),
             datetime.datetime(2020, 1, 31, 0, 0),
