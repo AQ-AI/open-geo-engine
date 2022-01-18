@@ -41,6 +41,30 @@ jobs:
         run: |
           poetry install
 
+      - name: copy test_osm file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "tests/test_data/test_osm.csv"
+          target: "tests/test_data/test_osm.csv"
+
+      - name: copy test_gee file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "tests/test_data/test_gee.csv"
+          target: "tests/test_data/test_gee.csv"
+
+      - name: copy test_centroid file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "tests/test_data/test_centroid.csv"
+          target: "tests/test_data/test_centroid.csv"
+
+      - name: copy streetview_links file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "tests/test_data/streetview_links.txt"
+          target: "tests/test_data/streetview_links.txt"
+
       - name: Run tests
         run: |
           poetry run pytest tests/ -vv --disable-warnings
@@ -78,12 +102,6 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
-
-      - name: copy file
-        uses: canastro/copy-file-action@master
-        with:
-          source: "tests/test_data/test_osm.csv"
-          target: "tests/test_data/test_osm.csv"
 
       - name: Install flake8
         run: |
