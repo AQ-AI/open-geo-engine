@@ -45,9 +45,7 @@ def test_ee_array_to_df():
         centroid_point = ee.Geometry.Point(lon, lat)
         s_date, e_date = load_ee_data._generate_start_end_date()
         collection = (
-            ee.ImageCollection(image_collection)
-            .select(image_band)
-            .filterDate(s_date, e_date)
+            ee.ImageCollection(image_collection).select(image_band).filterDate(s_date, e_date)
         )
         landsat_centroid_point = collection.getRegion(centroid_point, 10).getInfo()
         assert landsat_centroid_point[0] == [
