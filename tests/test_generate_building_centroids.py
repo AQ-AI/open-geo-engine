@@ -8,9 +8,7 @@ def test_get_boundaries_from_place():
     tags = {"leisure": "park"}
 
     generate_building_centroids = GenerateBuildingCentroids(countries, place, tags)
-    assert len(generate_building_centroids.execute()) == len(
-        pd.read_csv("tests/test_data/test_osm.csv", index_col=False)
-    )
+
     assert generate_building_centroids._get_boundaries_from_place().shape == (1, 20)
     assert generate_building_centroids.get_representative_building_point().shape == (
         1,

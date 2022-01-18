@@ -1,7 +1,6 @@
 import os
+import pandas as pd
 
-
-from open_geo_engine.utils.utils import read_csv
 from open_geo_engine.src.get_google_streetview import GetGoogleStreetView
 
 
@@ -15,7 +14,17 @@ def test_get_google_streetview():
     metadata_folder = "tests/test_data"
     place = "Parque_El_Retiro_Madrid"
     meta_base = "https://maps.googleapis.com/maps/api/streetview/metadata?"
-    satellite_data_df = read_csv("tests/test_data/test_gee.csv")
+    satellite_data_df = pd.DataFrame(
+        {
+            "longitude": [-3.683317243711068, -3.683317243711068],
+            "latitude": [40.41498005371624, 40.41498005371624],
+            "time": [1578653746335, 1580036142137],
+            "datetime": ["2020-01-10 10:55:46.335,", "2020-01-26 10:55:42.137"],
+            "B4": [7053, 6869],
+            "B3": [7177, 7069],
+            "B2": [7825, 7720],
+        }
+    )
 
     get_google_streetview = GetGoogleStreetView(
         size,
