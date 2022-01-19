@@ -3,7 +3,6 @@ from setuptools import setup
 
 packages = [
     "open_geo_engine",
-    "open_geo_engine.cli",
     "open_geo_engine.config",
     "open_geo_engine.src",
     "open_geo_engine.utils",
