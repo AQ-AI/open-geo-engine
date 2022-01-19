@@ -16,8 +16,8 @@ class GetGoogleStreetView:
         pitch: str,
         key: str,
         image_folder: str,
-        links_folder: str,
-        metadata_folder: str,
+        links_file: str,
+        metadata_file: str,
         place: str,
         meta_base: str,
     ):
@@ -26,8 +26,8 @@ class GetGoogleStreetView:
         self.pitch = pitch
         self.key = key
         self.image_folder = image_folder
-        self.links_folder = links_folder
-        self.metadata_folder = metadata_folder
+        self.links_file = links_file
+        self.metadata_file = metadata_file
         self.place = place
         self.meta_base = meta_base
 
@@ -40,8 +40,10 @@ class GetGoogleStreetView:
             pitch=streetview_config.PITCH,
             key=streetview_config.KEY,
             image_folder=streetview_config.LOCAL_IMAGE_FOLDER,
-            links_folder=streetview_config.LOCAL_LINKS_FOLDER,
-            metadata_folder=streetview_config.LOCAL_METADATA_FOLDER,
+            links_file=open(f"{streetview_config.LOCAL_LINKS_FOLDER}/streetview_links.txt", "w"),
+            metadata_file=open(
+                f"{streetview_config.LOCAL_METADATA_FOLDER}/streetview_metadata.json", "w"
+            ),
             place=streetview_config.PLACE,
             meta_base=streetview_config.META_BASE,
         )
@@ -73,14 +75,12 @@ class GetGoogleStreetView:
 
     def save_streetview_information(self, results):
         results.download_links(self.image_folder)
-        results.save_links(f"{self.links_folder}/streetview_links.txt")
-        results.save_metadata(f"{self.metadata_folder}/streetview_metadata.json")
+        results.save_links(f"{self.links_file}")
+        results.save_metadata(f"{self.metadata_file}")
 
     def add_links_to_satellite_df(self, satellite_data_df):
         satellite_data_df["lat_lon_str"] = self._join_lat_lon(satellite_data_df)
-        street_view_links_df = pd.read_csv(
-            f"{self.links_folder}/streetview_links.txt", sep="\n", names=["URL"]
-        )
+        street_view_links_df = pd.read_csv(f"{self.links_file}", sep="\n", names=["URL"])
         street_view_links_df["latitude"] = street_view_links_df["URL"].str.extract(
             "location=(.*)%2C"
         )

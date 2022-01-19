@@ -3,7 +3,6 @@ from setuptools import setup
 
 packages = [
     "open_geo_engine",
-    "open_geo_engine.cli",
     "open_geo_engine.config",
     "open_geo_engine.src",
     "open_geo_engine.utils",
@@ -38,7 +37,7 @@ install_requires = [
 
 setup_kwargs = {
     "name": "open-geo-engine",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "entry_points": {"console_scripts": ["open-geo-engine = open_geo_engine.__main__:main"]},
     "description": "",
     "long_description": None,

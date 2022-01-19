@@ -10,8 +10,8 @@ def test_get_google_streetview():
     pitch = "-0.76"
     key = os.environ.get("GOOGLE_DEV_API_KEY")
     image_folder = "tests/test_data"
-    links_folder = "tests/test_data"
-    metadata_folder = "tests/test_data"
+    links_file = "tests/test_data/streetview_links.txt"
+    metadata_file = "tests/test_data/test_metadata.json"
     place = "Parque_El_Retiro_Madrid"
     meta_base = "https://maps.googleapis.com/maps/api/streetview/metadata?"
     satellite_data_df = pd.DataFrame(
@@ -32,8 +32,8 @@ def test_get_google_streetview():
         pitch,
         key,
         image_folder,
-        links_folder,
-        metadata_folder,
+        links_file,
+        metadata_file,
         place,
         meta_base,
     )

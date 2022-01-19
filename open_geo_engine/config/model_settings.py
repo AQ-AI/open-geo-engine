@@ -13,15 +13,9 @@ class StreetViewConfig:
     HEADING: str = "151.78"
     PITCH: str = "-0.76"
     KEY = os.environ.get("GOOGLE_DEV_API_KEY")
-    LOCAL_IMAGE_FOLDER: str = (
-        f"{Path(__file__).resolve().parent.parent.parent}/local_data/streetview_images"
-    )
-    LOCAL_LINKS_FOLDER: str = (
-        f"{Path(__file__).resolve().parent.parent.parent}/local_data/streetview_links"
-    )
-    LOCAL_METADATA_FOLDER: str = (
-        f"{Path(__file__).resolve().parent.parent.parent}/local_data/streetview_metadata"
-    )
+    LOCAL_IMAGE_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent.parent.parent.parent.parent.parent}/local_data/streetview_images"
+    LOCAL_LINKS_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent.parent.parent.parent.parent.parent}/local_data/streetview_links"
+    LOCAL_METADATA_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent.parent.parent.parent.parent.parent}/local_data/streetview_metadata"
     PLACE = "Santo_Domingo_Dominican_Republic"
     META_BASE = "https://maps.googleapis.com/maps/api/streetview/metadata?"
 
