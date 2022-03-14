@@ -24,7 +24,8 @@ class GenerateBuildingCentroidsFlow:
         building_generator = GenerateBuildingCentroids.from_dataclass_config(
             self.data_settings, self.osm_settings
         )
-
+        buildings_df = building_generator.execute(list_of_points)
+        write_csv(buildings_df, "local_data/buildings_total.csv")
         return building_generator.execute(list_of_points)
 
 
