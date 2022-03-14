@@ -30,6 +30,8 @@ google = "^3.0.0"
 google-streetview = "^1.2.9"
 typing-extensions = "^4.0.1"
 flake8 = "^4.0.1"
+scikit-learn = "^1.0.2"
+ipykernel = "^6.9.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
