@@ -60,6 +60,9 @@ class GenerateBuildingCentroids:
             building_footprints = ox.geometries.geometries_from_point(
                 lat_lon, self.tags, 1000
             )
+            building_footprints[
+                "centroid_geometry"
+            ] = building_footprints.representative_point()
             if i == 0:
                 building_footprints.to_csv(
                     "local_data/residential_buildings_flare_1km.csv",
