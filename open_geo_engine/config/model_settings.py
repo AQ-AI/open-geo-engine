@@ -16,31 +16,35 @@ class StreetViewConfig:
     LOCAL_IMAGE_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent.parent.parent.parent.parent.parent}/local_data/streetview_images"
     LOCAL_LINKS_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent.parent.parent.parent.parent.parent}/local_data/streetview_links"
     LOCAL_METADATA_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent.parent.parent.parent.parent.parent}/local_data/streetview_metadata"
-    PLACE = "Santo_Domingo_Dominican_Republic"
+    PLACE = "Iraqi_Kurdistan"
     META_BASE = "https://maps.googleapis.com/maps/api/streetview/metadata?"
 
 
 @dataclass
 class OSMConfig:
-    TAGS = {"building": "school"}
-    PLACE = "Santo Domingo, Dominican Republic"
+    TAGS = {"building": "residential"}
+    PLACE = "Iraq"
+    # NAME = "Iraqi Kurdistan"
+    # ADMIN_LEVEL = 3
 
 
 @dataclass
 class DataConfig:
-    COUNTRY_CODES = ["DO"]
+    COUNTRY_CODES = ["IQ"]
     YEAR: int = 2020
     MON_START: int = 1
     DATE_START: int = 1
     YEAR_END: int = 2021
     MON_END: int = 8
     DATE_END: int = 22
-    PLACE = "Santo Domingo, Dominican Republic"
+    PLACE = "Iraqi Kurdistan, Iraq"
     BASE_FOLDER = "/ee_data"
 
     LANDSAT_IMAGE_COLLECTION: str = "LANDSAT/LC08/C01/T1"
     MODEL_NAME = "LANDSAT"
-    LANDSAT_IMAGE_BAND: Sequence[str] = field(default_factory=lambda: ["B4", "B3", "B2"])
+    LANDSAT_IMAGE_BAND: Sequence[str] = field(
+        default_factory=lambda: ["B4", "B3", "B2"]
+    )
 
     NIGHTTIME_LIGHT_IMAGE_COLLECTION: str = "NOAA/VIIRS/DNB/MONTHLY_V1/VCMCFG"
     NIGHTTIME_LIGHT_IMAGE_BAND: str = "avg_rad"
@@ -57,7 +61,9 @@ class DataConfig:
         ]
     )
 
-    POPULATION_IMAGE_COLLECTION: str = "CIESIN/GPWv411/GPW_Basic_Demographic_Characteristics"
+    POPULATION_IMAGE_COLLECTION: str = (
+        "CIESIN/GPWv411/GPW_Basic_Demographic_Characteristics"
+    )
     POPULATION_IMAGE_BAND = "basic_demographic_characteristics"
 
     LAND_COVER_IMAGE_COLLECTION: str = "COPERNICUS/Landcover/100m/Proba-V-C3/Global"
