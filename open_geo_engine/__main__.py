@@ -1,11 +1,11 @@
 import click
 import ee
-
 from open_geo_engine.config.model_settings import (
     DataConfig,
     OSMConfig,
     StreetViewConfig,
 )
+
 from open_geo_engine.src.load_ee_data import LoadEEData
 from open_geo_engine.src.generate_building_centroids import GenerateBuildingCentroids
 from open_geo_engine.src.get_google_streetview import GetGoogleStreetView
@@ -20,7 +20,6 @@ class GenerateBuildingCentroidsFlow:
         building_generator = GenerateBuildingCentroids.from_dataclass_config(
             self.data_settings, self.osm_settings
         )
-
         return building_generator.execute()
 
 
@@ -33,14 +32,14 @@ class LoadDataFlow:
         ee.Authenticate()
         data_loader = LoadEEData.from_dataclass_config(self.config)
 
-        data_loader.execute()
+        data_loader.execute(save_images=True)
 
     def execute_for_country(self, building_footprint_gdf):
         # Trigger the authentication flow.
         ee.Authenticate()
         data_loader = LoadEEData.from_dataclass_config(self.config)
 
-        return data_loader.execute_for_country(building_footprint_gdf)
+        return data_loader.execute_for_country(building_footprint_gdf, save_images=True)
 
 
 class GetGoogleStreetViewFlow:
@@ -62,6 +61,7 @@ def generate_building_centroids():
 
 @click.command("load_data", help="Load data from Google Earth Engine")
 def load_data():
+
     LoadDataFlow().execute()
 
 

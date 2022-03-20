@@ -25,6 +25,7 @@ def test_ee_array_to_df():
     image_collection = "LANDSAT/LC08/C01/T1"
     image_band = ["B4", "B3", "B2"]
     folder = "/test_data"
+    image_folder = "/test_data"
     model_name = "LANDSAT"
     expected_date_list = ["2020-01-01", "2020-01-08", "2020-01-15", "2020-01-22", "2020-01-29"]
 
@@ -42,6 +43,7 @@ def test_ee_array_to_df():
                 image_collection,
                 image_band,
                 folder,
+                image_folder,
                 model_name,
                 place,
             )._get_xy(),
@@ -63,6 +65,7 @@ def test_ee_array_to_df():
             image_collection,
             image_band,
             folder,
+            image_folder,
             model_name,
             place,
         )._date_range(start, end)
@@ -87,6 +90,7 @@ def test_ee_array_to_df():
                     image_collection,
                     image_band,
                     folder,
+                    image_folder,
                     model_name,
                     place,
                 )._generate_dates(date_list)

@@ -92,10 +92,10 @@ bandit:
 	@poetry run bandit -r open-geo-engine -ll -ii
 
 test:
-	pytest -vv -s -vv tests/
+	pytest -vv -s -vv tests/ --disable-pytest-warnings
 
 test-db:
-	pytest -vv -s -vv tests/
+	pytest -vv -s -vv tests/ --disable-pytest-warnings
 
 test-cov:
-	pytest --cov=open_geo_engine tests/ -vv
+	pytest --cov=open_geo_engine tests/ -vv --disable-pytest-warnings
