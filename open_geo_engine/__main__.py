@@ -19,14 +19,10 @@ class GenerateBuildingCentroidsFlow:
         self.osm_settings = OSMConfig()
 
     def execute(self):
-        flaring_df = pd.read_csv("local_data/kurdistan_.csv")
-        list_of_points = list(zip(flaring_df.Lat_GMTCO, flaring_df.Lon_GMTCO))
         building_generator = GenerateBuildingCentroids.from_dataclass_config(
             self.data_settings, self.osm_settings
         )
-        buildings_df = building_generator.execute(list_of_points)
-        write_csv(buildings_df, "local_data/buildings_total.csv")
-        return building_generator.execute(list_of_points)
+        return building_generator.execute()
 
 
 class LoadDataFlow:
@@ -64,8 +60,7 @@ class GetGoogleStreetViewFlow:
 
 @click.command("generate_building_centroids", help="Retrieve building centroids")
 def generate_building_centroids():
-    settlement_df = GenerateBuildingCentroidsFlow().execute()
-    write_csv(settlement_df, f"local_data/{StreetViewConfig.PLACE}_buildings.csv")
+    GenerateBuildingCentroidsFlow().execute()
 
 
 @click.command("load_data", help="Load data from Google Earth Engine")
@@ -84,7 +79,6 @@ def get_google_streetview(satellite_data_df):
 @click.command("run_pipeline", help="Run full analysis pipeline")
 def run_full_pipeline():
     building_footprint_gdf = GenerateBuildingCentroidsFlow().execute()
-    building_footprint_gdf = building_footprint_gdf[:10]
     satellite_data_df = LoadDataFlow().execute_for_country(building_footprint_gdf)
     GetGoogleStreetViewFlow().execute_for_country(satellite_data_df)
 
