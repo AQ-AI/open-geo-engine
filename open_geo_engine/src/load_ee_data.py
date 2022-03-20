@@ -80,31 +80,29 @@ class LoadEEData:
             # Initialize the library.
             ee.Initialize()
             centroid_point = ee.Geometry.Point(lon, lat)
-            s_date, e_date = self._generate_start_end_date()
+            s_datetime, e_datetime = self._generate_start_end_date()
             collection = (
                 ee.ImageCollection(self.image_collection)
                 .filterBounds(centroid_point)
                 .select(self.image_band)
-                .filterDate(s_date, e_date)
+                .filterDate(s_datetime, e_datetime)
             )
             landsat_centroid_point = collection.getRegion(centroid_point, 10).getInfo()
-            print(landsat_centroid_point)
             building_footprints_satellite_list.append(
                 ee_array_to_df(landsat_centroid_point, self.image_band)
             )
             if save_images is True:
-                self.save_images_to_drive(collection, s_date, e_date)
+                self.save_images_to_drive(collection, s_datetime, e_datetime, lon, lat)
         return pd.concat(building_footprints_satellite_list)
 
-    def prepare_dates(self) -> Tuple[datetime.date, datetime.date]:
-        start, end = self._generate_start_end_date()
-        date_list = self._date_range(start, end)
-        return self._generate_dates(date_list)
-
-    def save_images_to_drive(self, collection, s_date, e_date):
+    def save_images_to_drive(self, collection, s_datetime, e_datetime, lon, lat):
+        s_date = s_datetime.date()
+        e_date = e_datetime.date()
+        lon_without_symbol = self._replace_symbol(lon)
+        lat_without_symbol = self._replace_symbol(lat)
         geemap.ee_export_image_collection(
             collection,
-            out_dir=f"{self.image_folder}/{self.model_name}_{s_date}_{e_date}",
+            out_dir=f"{self.image_folder}/{self.model_name}_{s_date}_{e_date}_{lat_without_symbol}_{lon_without_symbol}",
         )
 
     def _generate_start_end_date(self) -> Tuple[datetime.date, datetime.date]:
@@ -126,10 +124,15 @@ class LoadEEData:
             ].map(shapely.wkt.loads)
 
         except TypeError:
-            building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(
-                lambda p: p.x
-            )
-            building_footprint_gdf["y"] = building_footprint_gdf.centroid_geometry.map(
-                lambda p: p.y
-            )
+            pass
+
+        building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(
+            lambda p: p.x
+        )
+        building_footprint_gdf["y"] = building_footprint_gdf.centroid_geometry.map(
+            lambda p: p.y
+        )
         return building_footprint_gdf
+
+    def _replace_symbol(self, item):
+        return str(item).replace(".", "_")
