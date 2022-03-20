@@ -33,7 +33,6 @@ def test_prepare_dates():
     )
 
     assert len(load_ee_data._generate_start_end_date()) == 2
-    assert len(load_ee_data.prepare_dates()) == 53
 
 
 def test_get_xy():
