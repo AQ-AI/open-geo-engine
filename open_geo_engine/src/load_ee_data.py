@@ -21,6 +21,7 @@ class LoadEEData:
         image_collection: str,
         image_band: str,
         folder: str,
+        image_folder: str,
         model_name: str,
         place: str,
     ):
@@ -34,6 +35,7 @@ class LoadEEData:
         self.image_collection = image_collection
         self.image_band = image_band
         self.folder = folder
+        self.image_folder = image_folder
         self.model_name = model_name
         self.place = place
 
@@ -55,6 +57,7 @@ class LoadEEData:
             image_collection=config.LANDSAT_IMAGE_COLLECTION,
             image_band=config.LANDSAT_IMAGE_BAND,
             folder=config.BASE_FOLDER,
+            image_folder=config.IMAGE_FOLDER,
             model_name=config.MODEL_NAME,
             place=config.PLACE,
         )
@@ -64,7 +67,7 @@ class LoadEEData:
             delayed(self.execute_for_country) for country in self.countries
         )
 
-    def execute_for_country(self, building_footprint_gdf):
+    def execute_for_country(self, building_footprint_gdf, **kwargs):
         print(f"Downloading {self.model_name} data for {self.place}")
         building_footprint_gdf = self._get_xy(building_footprint_gdf)
         building_footprints_satellite_list = []
@@ -82,12 +85,26 @@ class LoadEEData:
             building_footprints_satellite_list.append(
                 ee_array_to_df(landsat_centroid_point, self.image_band)
             )
+            if kwargs.get('save_images', None):
+                self.save_images_to_drive(collection)
         return pd.concat(building_footprints_satellite_list)
 
     def prepare_dates(self) -> Tuple[datetime.date, datetime.date]:
         start, end = self._generate_start_end_date()
         date_list = self._date_range(start, end)
         return self._generate_dates(date_list)
+
+    def save_images_to_drive(self, collection, s_date, e_date):
+        img = collection.mean()
+
+        down_args = {
+            'image': img,
+            'folder': self.image_folder,
+            'description': self.model_name+"_"+s_date+"_"+e_date,
+            'scale': 7000
+            }
+        task = ee.batch.Export.image.toDrive(**down_args)
+        task.start()
 
     def _generate_start_end_date(self) -> Tuple[datetime.date, datetime.date]:
         start = datetime.datetime(self.year, self.mon_start, self.date_start)
