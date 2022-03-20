@@ -4,7 +4,6 @@ from joblib import Parallel, delayed
 import osmnx as ox
 import pandas as pd
 import geopandas as gpd
-from open_geo_engine.utils.utils import write_csv
 
 from open_geo_engine.config.model_settings import DataConfig, OSMConfig
 
@@ -33,50 +32,31 @@ class GenerateBuildingCentroids:
 
         return cls(countries=countries, place=osm_config.PLACE, tags=osm_config.TAGS)
 
-    def execute(self, list_of_points):
+    def execute(self, **kwargs):
         print(f"Downloading {self.tags} for {self.place}")
-        if list_of_points:
-            building_footprint_gdfs = Parallel(
-                n_jobs=-1, backend="multiprocessing", verbose=5
-            )(
-                delayed(self.execute_for_country)(i, lat_lon)
-                for i, lat_lon in enumerate(list_of_points)
-            )
-        else:
-            building_footprint_gdfs = Parallel(
-                n_jobs=-1, backend="multiprocessing", verbose=5
-            )(delayed(self.execute_for_country)(country) for country in self.countries)
+        building_footprint_gdfs = Parallel(
+            n_jobs=-1, backend="multiprocessing", verbose=5
+        )(
+            delayed(self.execute_for_country)(location)
+            for location in (kwargs.get("list_of_points", self.countries))
+        )
         return pd.concat(building_footprint_gdfs)
 
-    def execute_for_country(self, i: int, lat_lon: str):
+    def execute_for_country(self, location):
         ox.config(log_console=False, use_cache=True)
-        return self.get_representative_building_point(i, lat_lon)
+        return self.get_representative_building_point(location)
 
     def _get_boundaries_from_place(self) -> gpd.GeoDataFrame:
         return ox.geometries.geometries_from_place(self.place, self.tags)
 
-    def get_representative_building_point(self, i, lat_lon) -> gpd.GeoDataFrame:
-        if lat_lon:
+    def get_representative_building_point(self, location) -> gpd.GeoDataFrame:
+        if type(location) is Tuple:
             building_footprints = ox.geometries.geometries_from_point(
-                lat_lon, self.tags, 1000
+                location, self.tags, 1000
             )
             building_footprints[
                 "centroid_geometry"
             ] = building_footprints.representative_point()
-            if i == 0:
-                building_footprints.to_csv(
-                    "local_data/residential_buildings_flare_3km.csv",
-                    mode="w",
-                    index=False,
-                    header=True,
-                )
-            else:
-                building_footprints.to_csv(
-                    "local_data/residential_buildings_flare_3km.csv",
-                    mode="a",
-                    index=False,
-                    header=False,
-                )
 
         else:
             building_footprints = self._get_boundaries_from_place()

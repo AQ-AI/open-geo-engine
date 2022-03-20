@@ -120,13 +120,16 @@ class LoadEEData:
         return [str(date) for date in date_list]
 
     def _get_xy(self, building_footprint_gdf):
-        building_footprint_gdf["centroid_geometry"] = building_footprint_gdf[
-            "centroid_geometry"
-        ].map(shapely.wkt.loads)
-        building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(
-            lambda p: p.x
-        )
-        building_footprint_gdf["y"] = building_footprint_gdf.centroid_geometry.map(
-            lambda p: p.y
-        )
+        try:
+            building_footprint_gdf["centroid_geometry"] = building_footprint_gdf[
+                "centroid_geometry"
+            ].map(shapely.wkt.loads)
+
+        except TypeError:
+            building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(
+                lambda p: p.x
+            )
+            building_footprint_gdf["y"] = building_footprint_gdf.centroid_geometry.map(
+                lambda p: p.y
+            )
         return building_footprint_gdf

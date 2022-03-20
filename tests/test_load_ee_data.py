@@ -14,6 +14,7 @@ def test_prepare_dates():
     image_collection = "LANDSAT/LC08/C01/T1"
     image_band = ["B4", "B3", "B2"]
     folder = "/ee_data"
+    image_folder = "/ee_data"
     model_name = "LANDSAT"
     load_ee_data = LoadEEData(
         countries,
@@ -26,6 +27,7 @@ def test_prepare_dates():
         image_collection,
         image_band,
         folder,
+        image_folder,
         model_name,
         place,
     )
@@ -51,6 +53,7 @@ def test_get_xy():
     image_collection = "LANDSAT/LC08/C01/T1"
     image_band = ["B4", "B3", "B2"]
     folder = "/test_data"
+    image_folder = "/test_data"
     model_name = "LANDSAT"
 
     load_ee_data = LoadEEData(
@@ -64,6 +67,7 @@ def test_get_xy():
         image_collection,
         image_band,
         folder,
+        image_folder,
         model_name,
         place,
     )
