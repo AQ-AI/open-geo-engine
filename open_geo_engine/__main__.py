@@ -19,7 +19,7 @@ class GenerateBuildingCentroidsFlow:
         self.osm_settings = OSMConfig()
 
     def execute(self):
-        flaring_df = pd.read_csv("local_data/flaring_geometries_2pd.csv")
+        flaring_df = pd.read_csv("local_data/kurdistan_.csv")
         list_of_points = list(zip(flaring_df.Lat_GMTCO, flaring_df.Lon_GMTCO))
         building_generator = GenerateBuildingCentroids.from_dataclass_config(
             self.data_settings, self.osm_settings
@@ -38,14 +38,14 @@ class LoadDataFlow:
         ee.Authenticate()
         data_loader = LoadEEData.from_dataclass_config(self.config)
 
-        data_loader.execute()
+        data_loader.execute(save_images=True)
 
     def execute_for_country(self, building_footprint_gdf):
         # Trigger the authentication flow.
         ee.Authenticate()
         data_loader = LoadEEData.from_dataclass_config(self.config)
 
-        return data_loader.execute_for_country(building_footprint_gdf)
+        return data_loader.execute_for_country(building_footprint_gdf, save_images=True)
 
 
 class GetGoogleStreetViewFlow:
@@ -70,6 +70,7 @@ def generate_building_centroids():
 
 @click.command("load_data", help="Load data from Google Earth Engine")
 def load_data():
+
     LoadDataFlow().execute()
 
 

@@ -41,7 +41,7 @@ class DataConfig:
     BASE_FOLDER = "/ee_data"
 
     LANDSAT_IMAGE_COLLECTION: str = "LANDSAT/LC08/C01/T1"
-    MODEL_NAME = "LANDSAT"
+    MODEL_NAME = "CH4"
     LANDSAT_IMAGE_BAND: Sequence[str] = field(
         default_factory=lambda: ["B4", "B3", "B2"]
     )
@@ -68,7 +68,7 @@ class DataConfig:
 
     LAND_COVER_IMAGE_COLLECTION: str = "COPERNICUS/Landcover/100m/Proba-V-C3/Global"
     LAND_COVER_IMAGE_BAND: str = "discrete_classification"
-
+    IMAGE_FOLDER = "local_data/image_folder"
     COUNTRY_BOUNDING_BOXES: Dict[
         StrictStr, Tuple[StrictStr, Tuple[float, float, float, float]]
     ] = field(

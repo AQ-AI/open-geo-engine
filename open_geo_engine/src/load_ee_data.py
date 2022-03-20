@@ -2,7 +2,9 @@ from typing import Tuple, Sequence, Any
 import datetime
 from joblib import Parallel, delayed
 import pandas as pd
+import shapely
 import ee
+import geemap
 
 from open_geo_engine.config.model_settings import DataConfig
 from open_geo_engine.utils.utils import ee_array_to_df
@@ -62,12 +64,14 @@ class LoadEEData:
             place=config.PLACE,
         )
 
-    def execute(self):
+    def execute(self, save_images):
+        building_footprint_gdf = pd.read_csv("local_data/kurdistan_flaring_points.csv")
+
         Parallel(n_jobs=-1, backend="multiprocessing", verbose=5)(
-            delayed(self.execute_for_country) for country in self.countries
+            delayed(self.execute_for_country)(building_footprint_gdf, save_images) for country in self.countries
         )
 
-    def execute_for_country(self, building_footprint_gdf, **kwargs):
+    def execute_for_country(self, building_footprint_gdf, save_images):
         print(f"Downloading {self.model_name} data for {self.place}")
         building_footprint_gdf = self._get_xy(building_footprint_gdf)
         building_footprints_satellite_list = []
@@ -78,15 +82,17 @@ class LoadEEData:
             s_date, e_date = self._generate_start_end_date()
             collection = (
                 ee.ImageCollection(self.image_collection)
+                .filterBounds(centroid_point)
                 .select(self.image_band)
                 .filterDate(s_date, e_date)
             )
             landsat_centroid_point = collection.getRegion(centroid_point, 10).getInfo()
+            print(landsat_centroid_point)
             building_footprints_satellite_list.append(
                 ee_array_to_df(landsat_centroid_point, self.image_band)
             )
-            if kwargs.get('save_images', None):
-                self.save_images_to_drive(collection)
+            if save_images is True:
+                self.save_images_to_drive(collection, s_date, e_date)
         return pd.concat(building_footprints_satellite_list)
 
     def prepare_dates(self) -> Tuple[datetime.date, datetime.date]:
@@ -95,16 +101,7 @@ class LoadEEData:
         return self._generate_dates(date_list)
 
     def save_images_to_drive(self, collection, s_date, e_date):
-        img = collection.mean()
-
-        down_args = {
-            'image': img,
-            'folder': self.image_folder,
-            'description': self.model_name+"_"+s_date+"_"+e_date,
-            'scale': 7000
-            }
-        task = ee.batch.Export.image.toDrive(**down_args)
-        task.start()
+        geemap.ee_export_image_collection(collection, out_dir=f"{self.image_folder}/{self.model_name}_{s_date}_{e_date}")
 
     def _generate_start_end_date(self) -> Tuple[datetime.date, datetime.date]:
         start = datetime.datetime(self.year, self.mon_start, self.date_start)
@@ -119,6 +116,7 @@ class LoadEEData:
         return [str(date) for date in date_list]
 
     def _get_xy(self, building_footprint_gdf):
+        building_footprint_gdf['centroid_geometry'] = building_footprint_gdf['centroid_geometry'].map(shapely.wkt.loads)
         building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(
             lambda p: p.x
         )
