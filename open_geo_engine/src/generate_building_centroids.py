@@ -65,15 +65,15 @@ class GenerateBuildingCentroids:
             ] = building_footprints.representative_point()
             if i == 0:
                 building_footprints.to_csv(
-                    "local_data/residential_buildings_flare_1km.csv",
-                    mode='w',
+                    "local_data/residential_buildings_flare_3km.csv",
+                    mode="w",
                     index=False,
                     header=True,
                 )
             else:
                 building_footprints.to_csv(
-                    "local_data/residential_buildings_flare_1km.csv",
-                    mode='a',
+                    "local_data/residential_buildings_flare_3km.csv",
+                    mode="a",
                     index=False,
                     header=False,
                 )

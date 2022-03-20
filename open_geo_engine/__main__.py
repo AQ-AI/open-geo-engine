@@ -1,12 +1,10 @@
 import click
 import ee
-import pandas as pd
 from open_geo_engine.config.model_settings import (
     DataConfig,
     OSMConfig,
     StreetViewConfig,
 )
-from open_geo_engine.utils.utils import write_csv
 
 from open_geo_engine.src.load_ee_data import LoadEEData
 from open_geo_engine.src.generate_building_centroids import GenerateBuildingCentroids

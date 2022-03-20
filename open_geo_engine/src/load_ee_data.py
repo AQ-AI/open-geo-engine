@@ -68,7 +68,8 @@ class LoadEEData:
         building_footprint_gdf = pd.read_csv("local_data/kurdistan_flaring_points.csv")
 
         Parallel(n_jobs=-1, backend="multiprocessing", verbose=5)(
-            delayed(self.execute_for_country)(building_footprint_gdf, save_images) for country in self.countries
+            delayed(self.execute_for_country)(building_footprint_gdf, save_images)
+            for country in self.countries
         )
 
     def execute_for_country(self, building_footprint_gdf, save_images):
@@ -101,7 +102,10 @@ class LoadEEData:
         return self._generate_dates(date_list)
 
     def save_images_to_drive(self, collection, s_date, e_date):
-        geemap.ee_export_image_collection(collection, out_dir=f"{self.image_folder}/{self.model_name}_{s_date}_{e_date}")
+        geemap.ee_export_image_collection(
+            collection,
+            out_dir=f"{self.image_folder}/{self.model_name}_{s_date}_{e_date}",
+        )
 
     def _generate_start_end_date(self) -> Tuple[datetime.date, datetime.date]:
         start = datetime.datetime(self.year, self.mon_start, self.date_start)
@@ -116,7 +120,9 @@ class LoadEEData:
         return [str(date) for date in date_list]
 
     def _get_xy(self, building_footprint_gdf):
-        building_footprint_gdf['centroid_geometry'] = building_footprint_gdf['centroid_geometry'].map(shapely.wkt.loads)
+        building_footprint_gdf["centroid_geometry"] = building_footprint_gdf[
+            "centroid_geometry"
+        ].map(shapely.wkt.loads)
         building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(
             lambda p: p.x
         )
