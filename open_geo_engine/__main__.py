@@ -24,15 +24,16 @@ class GenerateBuildingCentroidsFlow:
 
 
 class LoadDataFlow:
-    def __init__(self):
+    def __init__(self, filepath):
         self.config = DataConfig()
+        self.filepath = filepath
 
     def execute(self):
         # Trigger the authentication flow.
         ee.Authenticate()
         data_loader = LoadEEData.from_dataclass_config(self.config)
 
-        data_loader.execute(save_images=True)
+        data_loader.execute(save_images=True, self.filepath)
 
     def execute_for_country(self, building_footprint_gdf):
         # Trigger the authentication flow.
