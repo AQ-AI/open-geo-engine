@@ -64,8 +64,8 @@ class LoadEEData:
             place=config.PLACE,
         )
 
-    def execute(self, save_images):
-        building_footprint_gdf = pd.read_csv("local_data/kurdistan_flaring_points.csv")
+    def execute(self, save_images, filepath):
+        building_footprint_gdf = pd.read_csv(filepath)
 
         Parallel(n_jobs=-1, backend="multiprocessing", verbose=5)(
             delayed(self.execute_for_country)(building_footprint_gdf, save_images)
@@ -87,7 +87,7 @@ class LoadEEData:
                 .select(self.image_band)
                 .filterDate(s_datetime, e_datetime)
             )
-            landsat_centroid_point = collection.getRegion(centroid_point, 10).getInfo()
+            landsat_centroid_point = self._get_centroid_value_from_collection(collection, centroid_point)
             building_footprints_satellite_list.append(
                 ee_array_to_df(landsat_centroid_point, self.image_band)
             )
@@ -104,6 +104,12 @@ class LoadEEData:
             collection,
             out_dir=f"{self.image_folder}/{self.model_name}_{s_date}_{e_date}_{lat_without_symbol}_{lon_without_symbol}",
         )
+
+    def _get_centroid_value_from_collection(self, collection, centroid_point):
+        try:
+            return collection.getRegion(centroid_point, 10).getInfo()
+        except ee.ee_exception.EEException:
+            pass
 
     def _generate_start_end_date(self) -> Tuple[datetime.date, datetime.date]:
         start = datetime.datetime(self.year, self.mon_start, self.date_start)
