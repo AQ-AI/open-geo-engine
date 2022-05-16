@@ -4,6 +4,8 @@ from joblib import Parallel, delayed
 import pandas as pd
 import shapely
 import ee
+from ee.ee_exception import EEException
+from googleapiclient.errors import HttpError
 import geemap
 
 from open_geo_engine.config.model_settings import DataConfig
@@ -108,7 +110,8 @@ class LoadEEData:
     def _get_centroid_value_from_collection(self, collection, centroid_point):
         try:
             return collection.getRegion(centroid_point, 10).getInfo()
-        except ee.ee_exception.EEException:
+        except (EEException, HttpError):
+            print(centroid_point)
             pass
 
     def _generate_start_end_date(self) -> Tuple[datetime.date, datetime.date]:
