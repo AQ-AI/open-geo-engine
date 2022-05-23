@@ -1,12 +1,13 @@
-from typing import Tuple, Sequence, Any
 import datetime
-from joblib import Parallel, delayed
+from typing import Any, Sequence, Tuple
+
+import ee
+import geemap
 import pandas as pd
 import shapely
-import ee
 from ee.ee_exception import EEException
 from googleapiclient.errors import HttpError
-import geemap
+from joblib import Parallel, delayed
 
 from open_geo_engine.config.model_settings import DataConfig
 from open_geo_engine.utils.utils import ee_array_to_df
@@ -89,7 +90,9 @@ class LoadEEData:
                 .select(self.image_band)
                 .filterDate(s_datetime, e_datetime)
             )
-            landsat_centroid_point = self._get_centroid_value_from_collection(collection, centroid_point)
+            landsat_centroid_point = self._get_centroid_value_from_collection(
+                collection, centroid_point
+            )
             building_footprints_satellite_list.append(
                 ee_array_to_df(landsat_centroid_point, self.image_band)
             )
@@ -135,12 +138,8 @@ class LoadEEData:
         except TypeError:
             pass
 
-        building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(
-            lambda p: p.x
-        )
-        building_footprint_gdf["y"] = building_footprint_gdf.centroid_geometry.map(
-            lambda p: p.y
-        )
+        building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(lambda p: p.x)
+        building_footprint_gdf["y"] = building_footprint_gdf.centroid_geometry.map(lambda p: p.y)
         return building_footprint_gdf
 
     def _replace_symbol(self, item):
