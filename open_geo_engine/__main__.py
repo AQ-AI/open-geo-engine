@@ -33,7 +33,7 @@ class LoadDataFlow:
         ee.Authenticate()
         data_loader = LoadEEData.from_dataclass_config(self.config)
 
-        data_loader.execute(save_images=True, self.filepath)
+        data_loader.execute(self.filepath, save_images=True)
 
     def execute_for_country(self, building_footprint_gdf):
         # Trigger the authentication flow.

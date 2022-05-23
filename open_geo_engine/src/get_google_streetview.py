@@ -90,7 +90,7 @@ class GetGoogleStreetView:
     def add_links_to_satellite_df(self, satellite_data_df):
         satellite_data_df["lat_lon_str"] = self._join_lat_lon(satellite_data_df)
         street_view_links_df = pd.read_csv(
-            f"{self.links_file}", sep="\n", names=["URL"]
+            f"{self.links_file}", lineterminator="\n", names=["URL"],
         )
         street_view_links_df["latitude"] = street_view_links_df["URL"].str.extract(
             "location=(.*)%2C"

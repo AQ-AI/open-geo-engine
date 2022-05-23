@@ -66,7 +66,7 @@ class LoadEEData:
             place=config.PLACE,
         )
 
-    def execute(self, save_images, filepath):
+    def execute(self, filepath, save_images):
         building_footprint_gdf = pd.read_csv(filepath)
 
         Parallel(n_jobs=-1, backend="multiprocessing", verbose=5)(

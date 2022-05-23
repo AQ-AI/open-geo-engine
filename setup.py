@@ -20,7 +20,7 @@ install_requires = [
     "click-option-group>=0.5.3,<0.6.0",
     "earthengine-api>=0.1.280,<0.2.0",
     "esda>=2.4.1,<3.0.0",
-    "geopandas>=0.9.0,<0.10.0",
+    "geopandas>=0.10.0",
     "google-streetview>=1.2.9,<2.0.0",
     "google>=3.0.0,<4.0.0",
     "hydra-core>=1.1.1,<2.0.0",
@@ -37,7 +37,7 @@ install_requires = [
 
 setup_kwargs = {
     "name": "open-geo-engine",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "entry_points": {"console_scripts": ["open-geo-engine = open_geo_engine.__main__:main"]},
     "description": "",
     "long_description": None,
