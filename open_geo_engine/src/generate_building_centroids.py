@@ -1,9 +1,9 @@
-from typing import Dict, Sequence, Any, Tuple
-from joblib import Parallel, delayed
+from typing import Any, Dict, Sequence, Tuple
 
+import geopandas as gpd
 import osmnx as ox
 import pandas as pd
-import geopandas as gpd
+from joblib import Parallel, delayed
 
 from open_geo_engine.config.model_settings import DataConfig, OSMConfig
 
@@ -34,9 +34,7 @@ class GenerateBuildingCentroids:
 
     def execute(self, **kwargs):
         print(f"Downloading {self.tags} for {self.place}")
-        building_footprint_gdfs = Parallel(
-            n_jobs=-1, backend="multiprocessing", verbose=5
-        )(
+        building_footprint_gdfs = Parallel(n_jobs=-1, backend="multiprocessing", verbose=5)(
             delayed(self.execute_for_country)(location)
             for location in (kwargs.get("list_of_points", self.countries))
         )
@@ -51,17 +49,11 @@ class GenerateBuildingCentroids:
 
     def get_representative_building_point(self, location) -> gpd.GeoDataFrame:
         if type(location) is Tuple:
-            building_footprints = ox.geometries.geometries_from_point(
-                location, self.tags, 1000
-            )
-            building_footprints[
-                "centroid_geometry"
-            ] = building_footprints.representative_point()
+            building_footprints = ox.geometries.geometries_from_point(location, self.tags, 1000)
+            building_footprints["centroid_geometry"] = building_footprints.representative_point()
 
         else:
             building_footprints = self._get_boundaries_from_place()
 
-            building_footprints[
-                "centroid_geometry"
-            ] = building_footprints.representative_point()
+            building_footprints["centroid_geometry"] = building_footprints.representative_point()
         return building_footprints

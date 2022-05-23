@@ -1,10 +1,10 @@
 import os
-from pathlib import Path
-
 from dataclasses import field
-from typing import Dict, Tuple, Sequence
-from pydantic.dataclasses import dataclass
+from pathlib import Path
+from typing import Dict, Sequence, Tuple
+
 from pydantic import StrictStr
+from pydantic.dataclasses import dataclass
 
 
 @dataclass
@@ -42,9 +42,7 @@ class DataConfig:
 
     LANDSAT_IMAGE_COLLECTION: str = "LANDSAT/LC08/C01/T1"
     MODEL_NAME = "CH4"
-    LANDSAT_IMAGE_BAND: Sequence[str] = field(
-        default_factory=lambda: ["B4", "B3", "B2"]
-    )
+    LANDSAT_IMAGE_BAND: Sequence[str] = field(default_factory=lambda: ["B4", "B3", "B2"])
 
     NIGHTTIME_LIGHT_IMAGE_COLLECTION: str = "NOAA/VIIRS/DNB/MONTHLY_V1/VCMCFG"
     NIGHTTIME_LIGHT_IMAGE_BAND: str = "avg_rad"
@@ -61,9 +59,7 @@ class DataConfig:
         ]
     )
 
-    POPULATION_IMAGE_COLLECTION: str = (
-        "CIESIN/GPWv411/GPW_Basic_Demographic_Characteristics"
-    )
+    POPULATION_IMAGE_COLLECTION: str = "CIESIN/GPWv411/GPW_Basic_Demographic_Characteristics"
     POPULATION_IMAGE_BAND = "basic_demographic_characteristics"
 
     LAND_COVER_IMAGE_COLLECTION: str = "COPERNICUS/Landcover/100m/Proba-V-C3/Global"

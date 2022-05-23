@@ -1,10 +1,13 @@
-from typing import Tuple, Sequence, Any
 import datetime
-from joblib import Parallel, delayed
-import pandas as pd
-import shapely
+from typing import Any, Sequence, Tuple
+
 import ee
 import geemap
+import pandas as pd
+import shapely
+from ee.ee_exception import EEException
+from googleapiclient.errors import HttpError
+from joblib import Parallel, delayed
 
 from open_geo_engine.config.model_settings import DataConfig
 from open_geo_engine.utils.utils import ee_array_to_df
@@ -64,8 +67,8 @@ class LoadEEData:
             place=config.PLACE,
         )
 
-    def execute(self, save_images):
-        building_footprint_gdf = pd.read_csv("local_data/kurdistan_flaring_points.csv")
+    def execute(self, filepath, save_images):
+        building_footprint_gdf = pd.read_csv(filepath)
 
         Parallel(n_jobs=-1, backend="multiprocessing", verbose=5)(
             delayed(self.execute_for_country)(building_footprint_gdf, save_images)
@@ -87,7 +90,9 @@ class LoadEEData:
                 .select(self.image_band)
                 .filterDate(s_datetime, e_datetime)
             )
-            landsat_centroid_point = collection.getRegion(centroid_point, 10).getInfo()
+            landsat_centroid_point = self._get_centroid_value_from_collection(
+                collection, centroid_point
+            )
             building_footprints_satellite_list.append(
                 ee_array_to_df(landsat_centroid_point, self.image_band)
             )
@@ -104,6 +109,13 @@ class LoadEEData:
             collection,
             out_dir=f"{self.image_folder}/{self.model_name}_{s_date}_{e_date}_{lat_without_symbol}_{lon_without_symbol}",
         )
+
+    def _get_centroid_value_from_collection(self, collection, centroid_point):
+        try:
+            return collection.getRegion(centroid_point, 10).getInfo()
+        except (EEException, HttpError):
+            print(centroid_point)
+            pass
 
     def _generate_start_end_date(self) -> Tuple[datetime.date, datetime.date]:
         start = datetime.datetime(self.year, self.mon_start, self.date_start)
@@ -126,12 +138,8 @@ class LoadEEData:
         except TypeError:
             pass
 
-        building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(
-            lambda p: p.x
-        )
-        building_footprint_gdf["y"] = building_footprint_gdf.centroid_geometry.map(
-            lambda p: p.y
-        )
+        building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(lambda p: p.x)
+        building_footprint_gdf["y"] = building_footprint_gdf.centroid_geometry.map(lambda p: p.y)
         return building_footprint_gdf
 
     def _replace_symbol(self, item):

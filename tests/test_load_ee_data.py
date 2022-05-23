@@ -1,5 +1,5 @@
-from open_geo_engine.src.load_ee_data import LoadEEData
 from open_geo_engine.src.generate_building_centroids import GenerateBuildingCentroids
+from open_geo_engine.src.load_ee_data import LoadEEData
 
 
 def test_prepare_dates():

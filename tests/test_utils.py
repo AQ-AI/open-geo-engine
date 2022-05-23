@@ -1,11 +1,10 @@
 import datetime
 from unittest.mock import patch
-from pandas._testing import assert_frame_equal
-import pandas as pd
 
-from open_geo_engine.utils.utils import ee_array_to_df
-from open_geo_engine.src.load_ee_data import LoadEEData
+from pandas._testing import assert_frame_equal
+
 from open_geo_engine.src.generate_building_centroids import GenerateBuildingCentroids
+from open_geo_engine.src.load_ee_data import LoadEEData
 
 
 def test_ee_array_to_df():
