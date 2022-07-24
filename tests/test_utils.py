@@ -26,7 +26,13 @@ def test_ee_array_to_df():
     folder = "/test_data"
     image_folder = "/test_data"
     model_name = "LANDSAT"
-    expected_date_list = ["2020-01-01", "2020-01-08", "2020-01-15", "2020-01-22", "2020-01-29"]
+    expected_date_list = [
+        "2020-01-01",
+        "2020-01-08",
+        "2020-01-15",
+        "2020-01-22",
+        "2020-01-29",
+    ]
 
     with patch("open_geo_engine.src.load_ee_data.LoadEEData._get_xy") as get_xy:
         get_xy.return_value = buildings_gdf
@@ -44,7 +50,6 @@ def test_ee_array_to_df():
                 folder,
                 image_folder,
                 model_name,
-                place,
             )._get_xy(),
             buildings_gdf,
         )
@@ -66,10 +71,11 @@ def test_ee_array_to_df():
             folder,
             image_folder,
             model_name,
-            place,
         )._date_range(start, end)
 
-        with patch("open_geo_engine.src.load_ee_data.LoadEEData._generate_dates") as generate_dates:
+        with patch(
+            "open_geo_engine.src.load_ee_data.LoadEEData._generate_dates"
+        ) as generate_dates:
             generate_dates.return_value = [
                 "2020-01-01",
                 "2020-01-08",
@@ -91,7 +97,6 @@ def test_ee_array_to_df():
                     folder,
                     image_folder,
                     model_name,
-                    place,
                 )._generate_dates(date_list)
                 == expected_date_list
             )
