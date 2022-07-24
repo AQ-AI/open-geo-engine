@@ -9,7 +9,9 @@ def test_get_boundaries_from_place():
     generate_building_centroids = GenerateBuildingCentroids(countries, place, tags)
 
     assert generate_building_centroids._get_boundaries_from_place().shape == (1, 20)
-    assert generate_building_centroids.get_representative_building_point((1, 20)).shape == (
+    assert generate_building_centroids.get_representative_building_point(
+        (1, 20)
+    ).shape == (
         1,
         21,
     )
