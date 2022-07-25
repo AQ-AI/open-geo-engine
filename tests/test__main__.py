@@ -71,9 +71,7 @@ def test_main_flow(OSMTestConfig, DataTestConfig):
         }
     )
 
-    generate_building_centroid_flow = GenerateBuildingCentroidsFlow(
-        osm_config, data_config
-    )
+    generate_building_centroid_flow = GenerateBuildingCentroidsFlow(osm_config, data_config)
     assert generate_building_centroid_flow().execute().shape == (1, 21)
     data_config = DataTestConfig()
 
@@ -81,10 +79,7 @@ def test_main_flow(OSMTestConfig, DataTestConfig):
     assert load_data_flow().execute().shape == (2, 7)
 
     get_google_streetview_flow = GetGoogleStreetViewFlow(streetview_config)
-    assert (
-        len(get_google_streetview_flow().execute_for_country(satellite_data_df).columns)
-        == 10
-    )
+    assert len(get_google_streetview_flow().execute_for_country(satellite_data_df).columns) == 10
 
 
 @pytest.fixture(

@@ -75,9 +75,7 @@ class LoadEEData:
             building_footprint_gdf = kwargs.pop("building_footprint_gdf", False)
 
         Parallel(n_jobs=-1, backend="multiprocessing", verbose=5)(
-            delayed(self.execute_for_country)(
-                building_footprint_gdf, save_images, country
-            )
+            delayed(self.execute_for_country)(building_footprint_gdf, save_images, country)
             for country in self.countries
         )
 
@@ -154,12 +152,8 @@ class LoadEEData:
         except TypeError:
             pass
 
-        building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(
-            lambda p: p.x
-        )
-        building_footprint_gdf["y"] = building_footprint_gdf.centroid_geometry.map(
-            lambda p: p.y
-        )
+        building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(lambda p: p.x)
+        building_footprint_gdf["y"] = building_footprint_gdf.centroid_geometry.map(lambda p: p.y)
         return building_footprint_gdf
 
     def _replace_symbol(self, item):

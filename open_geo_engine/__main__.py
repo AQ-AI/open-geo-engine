@@ -42,9 +42,7 @@ class GetGoogleStreetViewFlow:
     def execute_for_country(self, satellite_data_df):
         # Trigger the authentication flow.
         ee.Authenticate()
-        streetview_downloader = GetGoogleStreetView.from_dataclass_config(
-            self.streetview_config
-        )
+        streetview_downloader = GetGoogleStreetView.from_dataclass_config(self.streetview_config)
 
         return streetview_downloader.execute_for_country(satellite_data_df)
 
@@ -60,9 +58,7 @@ def load_data():
     LoadDataFlow().execute()
 
 
-@click.command(
-    "get_google_streetview", help="Retrieve streetview images for building locations"
-)
+@click.command("get_google_streetview", help="Retrieve streetview images for building locations")
 def get_google_streetview(satellite_data_df):
     GetGoogleStreetViewFlow().execute_for_country(satellite_data_df)
 
@@ -70,9 +66,7 @@ def get_google_streetview(satellite_data_df):
 @click.command("run_pipeline", help="Run full analysis pipeline")
 def run_full_pipeline():
     building_footprint_gdf = GenerateBuildingCentroidsFlow().execute()
-    satellite_data_df = LoadDataFlow().execute(
-        building_footprint_gdf=building_footprint_gdf
-    )
+    satellite_data_df = LoadDataFlow().execute(building_footprint_gdf=building_footprint_gdf)
     GetGoogleStreetViewFlow().execute_for_country(satellite_data_df)
 
 
