@@ -1,7 +1,11 @@
 import click
 import ee
 
-from open_geo_engine.config.model_settings import DataConfig, OSMConfig, StreetViewConfig
+from open_geo_engine.config.model_settings import (
+    DataConfig,
+    OSMConfig,
+    StreetViewConfig,
+)
 from open_geo_engine.src.generate_building_centroids import GenerateBuildingCentroids
 from open_geo_engine.src.get_google_streetview import GetGoogleStreetView
 from open_geo_engine.src.load_ee_data import LoadEEData
@@ -20,23 +24,15 @@ class GenerateBuildingCentroidsFlow:
 
 
 class LoadDataFlow:
-    def __init__(self, filepath):
+    def __init__(self):
         self.config = DataConfig()
-        self.filepath = filepath
 
-    def execute(self):
+    def execute(self, **kwargs):
         # Trigger the authentication flow.
         ee.Authenticate()
         data_loader = LoadEEData.from_dataclass_config(self.config)
 
-        data_loader.execute(self.filepath, save_images=True)
-
-    def execute_for_country(self, building_footprint_gdf):
-        # Trigger the authentication flow.
-        ee.Authenticate()
-        data_loader = LoadEEData.from_dataclass_config(self.config)
-
-        return data_loader.execute_for_country(building_footprint_gdf, save_images=True)
+        data_loader.execute(save_images=False, **kwargs)
 
 
 class GetGoogleStreetViewFlow:
@@ -70,7 +66,7 @@ def get_google_streetview(satellite_data_df):
 @click.command("run_pipeline", help="Run full analysis pipeline")
 def run_full_pipeline():
     building_footprint_gdf = GenerateBuildingCentroidsFlow().execute()
-    satellite_data_df = LoadDataFlow().execute_for_country(building_footprint_gdf)
+    satellite_data_df = LoadDataFlow().execute(building_footprint_gdf=building_footprint_gdf)
     GetGoogleStreetViewFlow().execute_for_country(satellite_data_df)
 
 
