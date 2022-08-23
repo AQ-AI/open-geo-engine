@@ -29,12 +29,12 @@ class OSMConfig:
 @dataclass
 class DataConfig:
     COUNTRY_CODES = ["BZ"]
-    YEAR: int = 2022
+    YEAR: int = 2021
     MON_START: int = 1
-    DATE_START: int = 1
+    DATE_START: int = 31
     YEAR_END: int = 2022
-    MON_END: int = 1
-    DATE_END: int = 2
+    MON_END: int = 2
+    DATE_END: int = 4
     PLACE = "Belize"
     BASE_FOLDER = "/ee_data"
 
