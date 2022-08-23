@@ -67,9 +67,9 @@ class LoadEEData:
             place=config.PLACE,
         )
 
-    def execute(self, building_footprint_gdf, save_images, **kwargs):
-        if kwargs.get("filepath"):
-            building_footprint_gdf = pd.read_csv(kwargs.get("filepath"))
+    def execute(self, building_footprint_gdf, save_images):
+        # if kwargs.get("filepath"):
+        #     building_footprint_gdf = pd.read_csv(kwargs.get("filepath"))
         building_footprints_satellite_df = Parallel(
             n_jobs=-1, backend="multiprocessing", verbose=5
         )(
@@ -81,7 +81,7 @@ class LoadEEData:
         return building_footprints_satellite_df
 
     def execute_for_country(self, building_footprint_gdf, country, save_images):
-        logging.info(f"Downloading {self.model_name} data for {self.place}")
+        print(f"Downloading {self.model_name} data for {self.place}")
         ee.Initialize()
         coords_tup = country[1]
         s_datetime, e_datetime = self._generate_start_end_date()
@@ -94,6 +94,7 @@ class LoadEEData:
             .select(self.image_band)
             .filterDate(s_datetime, e_datetime)
         )
+        print(collection)
         if save_images is True:
             self.save_images_to_drive(collection, s_datetime, e_datetime, country)
 
@@ -106,6 +107,7 @@ class LoadEEData:
             )
 
             ee_df = ee_array_to_df(landsat_centroid_point, self.image_band)
+            print(ee_df)
             if not ee_df.empty:
                 osm_ee_list.append(ee_df)
         if len(self.countries) == 1:
