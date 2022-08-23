@@ -121,3 +121,7 @@ venv.bak/
 
 local_data/*
 !local_data/.keep
+
+
+# poetry
+poetry.lock
