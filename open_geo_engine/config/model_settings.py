@@ -16,26 +16,26 @@ class StreetViewConfig:
     LOCAL_IMAGE_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent.parent.parent.parent.parent.parent}/local_data/streetview_images"
     LOCAL_LINKS_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent.parent.parent.parent.parent.parent}/local_data/streetview_links"
     LOCAL_METADATA_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent.parent.parent.parent.parent.parent}/local_data/streetview_metadata"
-    PLACE = "Belize"
+    PLACE = "Iraq"
     META_BASE = "https://maps.googleapis.com/maps/api/streetview/metadata?"
 
 
 @dataclass
 class OSMConfig:
     TAGS = {"building": "school"}
-    PLACE = "Belize"
+    PLACE = "Iraq"
 
 
 @dataclass
 class DataConfig:
-    COUNTRY_CODES = ["BZ"]
+    COUNTRY_CODES = ["IQ"]
     YEAR: int = 2022
     MON_START: int = 1
     DATE_START: int = 1
-    YEAR_END: int = 2022
+    YEAR_END: int = 2015
     MON_END: int = 1
     DATE_END: int = 2
-    PLACE = "Belize"
+    PLACE = "Iraq"
     BASE_FOLDER = "/ee_data"
 
     LANDSAT_IMAGE_COLLECTION: str = "LANDSAT/LC08/C01/T1"

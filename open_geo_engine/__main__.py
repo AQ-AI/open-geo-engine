@@ -29,10 +29,16 @@ class LoadDataFlow:
 
     def execute(self, **kwargs):
         # Trigger the authentication flow.
-        ee.Authenticate()
         data_loader = LoadEEData.from_dataclass_config(self.config)
 
         data_loader.execute(save_images=False, **kwargs)
+
+    def execute_for_country(self, **kwargs):
+        # Trigger the authentication flow.
+        ee.Authenticate()
+        data_loader = LoadEEData.from_dataclass_config(self.config)
+
+        return data_loader.execute_for_country(kwargs, save_images=True)
 
 
 class GetGoogleStreetViewFlow:
@@ -73,7 +79,8 @@ def run_full_pipeline(path_to_local_data):
     building_footprint_gdf.to_csv(
         f"{path_to_local_data}/osm_data/building_footprint.csv"
     )
-    LoadDataFlow().execute()
+
+    LoadDataFlow().execute(f"{path_to_local_data}/osm_data/building_footprint.csv")
     # GetGoogleStreetViewFlow().execute_for_df(satellite_data_df)
 
 
