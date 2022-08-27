@@ -15,7 +15,6 @@ install_requires = [
     "PyYAML>=5.4.1,<6.0.0",
     "bandit>=1.7.0,<2.0.0",
     "black>=21.7b0,<22.0",
-    "catboost>=0.26.1,<0.27.0",
     "click-config-file>=0.6.0,<0.7.0",
     "click-option-group>=0.5.3,<0.6.0",
     "earthengine-api>=0.1.280,<0.2.0",
