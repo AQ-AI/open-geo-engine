@@ -1,16 +1,25 @@
 FROM ubuntu:20.04
 
-RUN DEBIAN_FRONTEND="noninteractive" TZ="America/New_York" 
+RUN apt-get update && DEBIAN_FRONTEND="noninteractive" TZ="America/New_York" apt-get install -y tzdata
 
-RUN apt-get update && apt-get install -y python3.10 python3-pip curl
+
+RUN apt-get install -y python3.10 python3-pip curl
 
 
 RUN apt-get install -y make build-essential libssl-dev zlib1g-dev \
 libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev \
-libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev openssl
+libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev openssl git
 
 
-RUN curl https://pyenv.run | bash
+ENV HOME="/root"
+WORKDIR ${HOME}
+RUN git clone --depth=1 https://github.com/pyenv/pyenv.git .pyenv
+ENV PYENV_ROOT="${HOME}/.pyenv"
+ENV PATH="${PYENV_ROOT}/shims:${PYENV_ROOT}/bin:${PATH}"
+
+ENV PYTHON_VERSION=3.10.5
+RUN pyenv install ${PYTHON_VERSION}
+RUN pyenv global ${PYTHON_VERSION}
 
 # Use Python 3 for `python`, `pip`
 # RUN    update-alternatives --install /usr/bin/python  python  /usr/bin/python3 1 \
@@ -18,7 +27,7 @@ RUN curl https://pyenv.run | bash
 
 
 # Install Poetry
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3 -
+RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH "$PATH:/root/.local/bin/"
 
 # Install Poetry packages (maybe remove the poetry.lock line if you don't want/have a lock file)
