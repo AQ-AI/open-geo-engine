@@ -2,7 +2,7 @@
 name = "open-geo-engine"
 version = "0.1.0"
 description = ""
-authors = ["ChristinaLast <christina.last@outlook.com>"]
+authors = ["None"]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"

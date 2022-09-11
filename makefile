@@ -75,7 +75,7 @@ lint: lint-pylama lint-black isort
 
 lint-black:
 	@echo -e "linting with black.."
-	@poetry run black . --line-length=100 --check --exclude /.venv
+	@poetry run black . --line-length=100 --exclude /.venv
 
 lint-pylama:
 	@echo -e "linting with pylama.."

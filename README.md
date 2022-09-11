@@ -28,7 +28,13 @@ Air pollution is a real-time phenomena, and understanding our changing exposure 
 ```
 git clone https://github.com/AQ-AI/open-geo-engine.git
 ```
+2. Installwith th the poetry environment using `poetry install`, ([docs](https://python-poetry.org/docs/basic-usage/#initialising-a-pre-existing-project) for installation instructions)
 
+```
+$ cd <local-path>open-geo-engine
+$ poetry install
+$ poetry shell
+```
 2. Fill in the required environmental variables in `.env.sample` and move to `.env`
 3. Export the environmental variables using
 
@@ -36,11 +42,10 @@ git clone https://github.com/AQ-AI/open-geo-engine.git
 source .env
 ```
 
-4. Initialise the poetry environment using `poetry init`, ([docs](https://python-poetry.org/docs/basic-usage/#initialising-a-pre-existing-project) for installation instructions)
 
 ```
 $ cd <local-path>open-geo-engine
-$ poetry init
+$ poetry install
 $ poetry shell
 ```
 
