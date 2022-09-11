@@ -61,8 +61,9 @@ def generate_building_centroids():
 
 
 @click.command("load_data", help="Load data from Google Earth Engine")
-def load_data():
-    LoadDataFlow().execute()
+@click.argument("location_file")
+def load_data(location_file):
+    LoadDataFlow().execute(location_file)
 
 
 @click.command(
