@@ -44,7 +44,6 @@ class LoadEEData:
         self.folder = folder
         self.image_folder = image_folder
         self.model_name = model_name
-        self.filepath = kwargs.pop("filepath", False)
 
     @classmethod
     def from_dataclass_config(cls, config: DataConfig) -> "LoadEEData":
@@ -101,7 +100,7 @@ class LoadEEData:
 
         if self.filepath:
             locations_gdf = pd.read_csv(self.filepath)
-            locations_gdf = self._get_xy(locations_gdf)
+            # locations_gdf = self._get_xy(locations_gdf)
             locations_ee_list = []
             for lon, lat in zip(locations_gdf.x, locations_gdf.y):
                 centroid_point = ee.Geometry.Point(lon, lat)
@@ -117,9 +116,9 @@ class LoadEEData:
                 locations_ee_df.to_csv(
                     f"local_data/gee_data/{country[0]}_{self.model_name}.csv"
                 )
-                return osm_ee_df
+                return locations_ee_df
             else:
-                return pd.concat(osm_ee_list)
+                return pd.concat(locations_ee_list)
 
     def save_images_to_drive(self, collection, s_datetime, e_datetime, country):
         s_date = s_datetime.date()
@@ -153,19 +152,15 @@ class LoadEEData:
 
     def _get_xy(self, locations_gdf):
         try:
-            locations_gdf["centroid_geometry"] = locations_gdf[
-                "centroid_geometry"
-            ].map(shapely.wkt.loads)
+            locations_gdf["centroid_geometry"] = locations_gdf["centroid_geometry"].map(
+                shapely.wkt.loads
+            )
 
         except TypeError:
             pass
 
-        locations_gdf["x"] = locations_gdf.centroid_geometry.map(
-            lambda p: p.x
-        )
-        locations_gdf["y"] = locations_gdf.centroid_geometry.map(
-            lambda p: p.y
-        )
+        locations_gdf["x"] = locations_gdf.centroid_geometry.map(lambda p: p.x)
+        locations_gdf["y"] = locations_gdf.centroid_geometry.map(lambda p: p.y)
         return locations_gdf
 
     def _replace_symbol(self, item):

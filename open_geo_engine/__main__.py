@@ -27,11 +27,12 @@ class LoadDataFlow:
     def __init__(self):
         self.config = DataConfig()
 
-    def execute(self, **kwargs):
+    def execute(self, filepath):
         # Trigger the authentication flow.
         data_loader = LoadEEData.from_dataclass_config(self.config)
-
-        data_loader.execute(save_images=False, **kwargs)
+        if filepath:
+            data_loader.filepath = filepath
+        data_loader.execute(save_images=False)
 
     def execute_for_country(self, **kwargs):
         # Trigger the authentication flow.
@@ -61,9 +62,9 @@ def generate_building_centroids():
 
 
 @click.command("load_data", help="Load data from Google Earth Engine")
-@click.argument("location_file")
-def load_data(location_file):
-    LoadDataFlow().execute(location_file)
+@click.argument("filepath")
+def load_data(filepath):
+    LoadDataFlow().execute(filepath)
 
 
 @click.command(

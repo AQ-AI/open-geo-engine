@@ -55,8 +55,6 @@ class DataConfig:
         default_factory=lambda: [
             "temperature_2m_above_ground",
             "relative_humidity_2m_above_ground",
-            "total_precipitation_surface",
-            "total_cloud_cover_entire_atmosphere",
             "u_component_of_wind_10m_above_ground",
             "v_component_of_wind_10m_above_ground",
         ]
