@@ -61,8 +61,8 @@ class LoadEEData:
             year_end=config.YEAR_END,
             mon_end=config.MON_END,
             date_end=config.DATE_END,
-            image_collection=config.POPULATION_IMAGE_COLLECTION,
-            image_band=config.POPULATION_IMAGE_BAND,
+            image_collection=config.METEROLOGICAL_IMAGE_COLLECTION,
+            image_band=config.METEROLOGICAL_IMAGE_BAND,
             folder=config.BASE_FOLDER,
             image_folder=config.IMAGE_FOLDER,
             model_name=config.MODEL_NAME,
@@ -83,7 +83,6 @@ class LoadEEData:
         geom = ee.Algorithms.GeometryConstructors.BBox(
             coords_tup[0], coords_tup[1], coords_tup[2], coords_tup[3]
         )
-        print(geom)
 
         collection = (
             ee.ImageCollection(self.image_collection)
@@ -98,14 +97,13 @@ class LoadEEData:
             out_dir=f"{self.image_folder}/{self.model_name}_{s_date}_{e_date}_{country[0]}",
         )
         if save_images:
-            print("i get here")
             self.save_images_to_drive(collection, s_datetime, e_datetime, country)
 
         if self.filepath:
-            building_footprint_gdf = pd.read_csv(self.filepath)
-            building_footprint_gdf = self._get_xy(building_footprint_gdf)
-            osm_ee_list = []
-            for lon, lat in zip(building_footprint_gdf.x, building_footprint_gdf.y):
+            locations_gdf = pd.read_csv(self.filepath)
+            locations_gdf = self._get_xy(locations_gdf)
+            locations_ee_list = []
+            for lon, lat in zip(locations_gdf.x, locations_gdf.y):
                 centroid_point = ee.Geometry.Point(lon, lat)
                 landsat_centroid_point = self._get_centroid_value_from_collection(
                     collection, centroid_point
@@ -113,10 +111,10 @@ class LoadEEData:
 
                 ee_df = ee_array_to_df(landsat_centroid_point, self.image_band)
                 if not ee_df.empty:
-                    osm_ee_list.append(ee_df)
+                    locations_ee_list.append(ee_df)
             if len(self.countries) == 1:
-                osm_ee_df = pd.concat(osm_ee_list)
-                osm_ee_df.to_csv(
+                locations_ee_df = pd.concat(locations_ee_list)
+                locations_ee_df.to_csv(
                     f"local_data/gee_data/{country[0]}_{self.model_name}.csv"
                 )
                 return osm_ee_df
@@ -126,7 +124,6 @@ class LoadEEData:
     def save_images_to_drive(self, collection, s_datetime, e_datetime, country):
         s_date = s_datetime.date()
         e_date = e_datetime.date()
-        collection.clop
         geemap.ee_export_image_collection(
             collection,
             out_dir=f"{self.image_folder}/{self.model_name}_{s_date}_{e_date}_{country}",
@@ -154,22 +151,22 @@ class LoadEEData:
     def _generate_dates(self, date_list) -> Sequence[str]:
         return [str(date) for date in date_list]
 
-    def _get_xy(self, building_footprint_gdf):
+    def _get_xy(self, locations_gdf):
         try:
-            building_footprint_gdf["centroid_geometry"] = building_footprint_gdf[
+            locations_gdf["centroid_geometry"] = locations_gdf[
                 "centroid_geometry"
             ].map(shapely.wkt.loads)
 
         except TypeError:
             pass
 
-        building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(
+        locations_gdf["x"] = locations_gdf.centroid_geometry.map(
             lambda p: p.x
         )
-        building_footprint_gdf["y"] = building_footprint_gdf.centroid_geometry.map(
+        locations_gdf["y"] = locations_gdf.centroid_geometry.map(
             lambda p: p.y
         )
-        return building_footprint_gdf
+        return locations_gdf
 
     def _replace_symbol(self, item):
         return str(item).replace(".", "_")

@@ -28,18 +28,18 @@ class OSMConfig:
 
 @dataclass
 class DataConfig:
-    COUNTRY_CODES = ["IQ"]
-    YEAR: int = 2022
-    MON_START: int = 1
-    DATE_START: int = 1
-    YEAR_END: int = 2015
-    MON_END: int = 1
-    DATE_END: int = 2
+    COUNTRY_CODES = ["IN"]
+    YEAR: int = 2019
+    MON_START: int = 3
+    DATE_START: int = 13
+    YEAR_END: int = 2020
+    MON_END: int = 7
+    DATE_END: int = 31
     PLACE = "Iraq"
     BASE_FOLDER = "/ee_data"
 
     LANDSAT_IMAGE_COLLECTION: str = "LANDSAT/LC08/C01/T1"
-    MODEL_NAME = "AOD"
+    MODEL_NAME = "GFS0P25"
     LANDSAT_IMAGE_BAND: Sequence[str] = field(
         default_factory=lambda: ["B4", "B3", "B2"]
     )
