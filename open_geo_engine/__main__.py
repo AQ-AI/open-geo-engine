@@ -5,11 +5,11 @@ import pandas as pd
 import geopandas as gpd 
 import collections
 collections.Callable = collections.abc.Callable
-from open_geo_engine.config.model_settings import DataConfig, OSMConfig, StreetViewConfig
+from open_geo_engine.config.model_settings import DataConfig, OSMConfig, StreetViewConfig, SatelliteTemporalAggregatorConfig
 from open_geo_engine.src.generate_building_centroids import GenerateBuildingCentroids
 from open_geo_engine.src.get_google_streetview import GetGoogleStreetView
 from open_geo_engine.src.load_ee_data import LoadEEData
-
+from open_geo_engine.src.satellite_temporal_aggregator import SatelliteTemporalAggregator
 
 class GenerateBuildingCentroidsFlow:
     def __init__(self):
@@ -41,6 +41,17 @@ class LoadDataFlow:
         return data_loader.execute_for_country(building_footprint_gdf, save_images=False)
 
 
+class SatelliteTemporalAggregatorFlow:
+    def __init__(self):
+        self.satellite_agg_config = SatelliteTemporalAggregatorConfig()
+
+    def execute(self):
+        satellite_temporal_aggregator = SatelliteTemporalAggregator.from_dataclass_config(
+            self.satellite_agg_config
+        )
+        return satellite_temporal_aggregator.execute()
+
+
 class GetGoogleStreetViewFlow:
     def __init__(self):
         self.streetview_config = StreetViewConfig()
@@ -60,8 +71,12 @@ def generate_building_centroids():
 
 @click.command("load_data", help="Load data from Google Earth Engine")
 def load_data():
-
     LoadDataFlow().execute()
+
+
+@click.command("aggregate_satellite_data", help="Aggregate Satellite data temporally")
+def aggregate_satellite_data():
+    SatelliteTemporalAggregatorFlow().execute()
 
 
 @click.command("get_google_streetview", help="Retrieve streetview images for building locations")
@@ -94,6 +109,7 @@ cli.add_command(generate_building_centroids)
 cli.add_command(load_data)
 cli.add_command(get_google_streetview)
 cli.add_command(run_full_pipeline)
+cli.add_command(aggregate_satellite_data)
 
 if __name__ == "__main__":
     cli()
