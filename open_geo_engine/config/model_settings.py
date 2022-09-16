@@ -9,8 +9,8 @@ from pydantic.dataclasses import dataclass
 
 @dataclass
 class PollutionDataConfig:
-    location_df = "open-geo-engine/local_data/locations_dehli.csv"
-    
+    location_file = "open-geo-engine/local_data/locations_dehli.csv"
+    pollution_dir = "/home/ubuntu/unicef_work/open-geo-engine/local_data/pollution_data"
 @dataclass
 class SatelliteTemporalAggregatorConfig:
     processed_target_df = "/home/ubuntu/unicef_work/open-geo-engine/local_data/satellite_data/monthly"
