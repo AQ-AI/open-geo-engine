@@ -8,14 +8,19 @@ from pydantic.dataclasses import dataclass
 
 
 @dataclass
-class PollutionDataConfig:
-    location_file = "open-geo-engine/local_data/locations_dehli.csv"
+class PollutionJoinerConfig:
+    location_file = "/home/ubuntu/unicef_work/open-geo-engine/local_data/locations_dehli.csv"
+    satellite_dir = "/home/ubuntu/unicef_work/open-geo-engine/local_data/aggregated_data"
     pollution_dir = "/home/ubuntu/unicef_work/open-geo-engine/local_data/pollution_data"
+    time_aggregations: Sequence[str] = field(default_factory=lambda: ["date", "month"])
+    joined_dir = "/home/ubuntu/unicef_work/open-geo-engine/local_data/joined_data"
+
+
 @dataclass
 class SatelliteTemporalAggregatorConfig:
-    processed_target_df = "/home/ubuntu/unicef_work/open-geo-engine/local_data/satellite_data/monthly"
+    processed_target_df = "/home/ubuntu/unicef_work/open-geo-engine/local_data/satellite_data"
     described_dir = "/home/ubuntu/unicef_work/open-geo-engine/local_data/aggregated_data"
-    time_aggregation = "month"
+    time_aggregations: Sequence[str] = field(default_factory=lambda: ["date", "month"])
 
 
 @dataclass
@@ -56,12 +61,15 @@ class DataConfig:
     LANDSAT_IMAGE_BAND: Sequence[str] = field(default_factory=lambda: ["B4", "B3", "B2"])
 
     NIGHTTIME_LIGHT_IMAGE_COLLECTION: str = "NOAA/VIIRS/DNB/MONTHLY_V1/VCMCFG"
-    NIGHTTIME_LIGHT_IMAGE_BAND: Sequence[str] = field(default_factory=lambda:["avg_rad"])
-
+    NIGHTTIME_LIGHT_IMAGE_BAND: Sequence[str] = field(default_factory=lambda: ["avg_rad"])
 
     AOD_IMAGE_COLLECTION: str = "MODIS/006/MCD19A2_GRANULES"
     AOD_IMAGE_BAND: Sequence[str] = field(
-        default_factory=lambda: ["Optical_Depth_047", "Optical_Depth_055", "AOD_Uncertainty", "Column_WV"
+        default_factory=lambda: [
+            "Optical_Depth_047",
+            "Optical_Depth_055",
+            "AOD_Uncertainty",
+            "Column_WV",
         ]
     )
     METEROLOGICAL_IMAGE_COLLECTION: str = "NOAA/GFS0P25"
@@ -76,16 +84,18 @@ class DataConfig:
 
     POPULATION_IMAGE_COLLECTION: str = "CIESIN/GPWv411/GPW_Basic_Demographic_Characteristics"
     POPULATION_IMAGE_BAND: Sequence[str] = field(
-        default_factory=lambda: ["basic_demographic_characteristics"])
+        default_factory=lambda: ["basic_demographic_characteristics"]
+    )
 
     NO2_IMAGE_COLLECTION: str = "COPERNICUS/S5P/NRTI/L3_NO2"
     NO_IMAGE_BAND: Sequence[str] = field(
-        default_factory=lambda: ["NO2_column_number_density", "cloud_fraction"])
-
+        default_factory=lambda: ["NO2_column_number_density", "cloud_fraction"]
+    )
 
     LAND_COVER_IMAGE_COLLECTION: str = "COPERNICUS/Landcover/100m/Proba-V-C3/Global"
     LAND_COVER_IMAGE_BAND: Sequence[str] = field(
-        default_factory=lambda: ["discrete_classification"])
+        default_factory=lambda: ["discrete_classification"]
+    )
     IMAGE_FOLDER = "local_data/image_folder"
     COUNTRY_BOUNDING_BOXES: Dict[
         StrictStr, Tuple[StrictStr, Tuple[float, float, float, float]]

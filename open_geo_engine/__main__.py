@@ -1,15 +1,24 @@
 import click
 import ee
 from shapely import wkt
-import pandas as pd 
-import geopandas as gpd 
+import pandas as pd
+import geopandas as gpd
 import collections
+
 collections.Callable = collections.abc.Callable
-from open_geo_engine.config.model_settings import DataConfig, OSMConfig, StreetViewConfig, SatelliteTemporalAggregatorConfig
+from open_geo_engine.config.model_settings import (
+    DataConfig,
+    OSMConfig,
+    StreetViewConfig,
+    SatelliteTemporalAggregatorConfig,
+    PollutionJoinerConfig,
+)
 from open_geo_engine.src.generate_building_centroids import GenerateBuildingCentroids
 from open_geo_engine.src.get_google_streetview import GetGoogleStreetView
 from open_geo_engine.src.load_ee_data import LoadEEData
 from open_geo_engine.src.satellite_temporal_aggregator import SatelliteTemporalAggregator
+from open_geo_engine.src.pollution_joiner import PollutionJoiner
+
 
 class GenerateBuildingCentroidsFlow:
     def __init__(self):
@@ -52,6 +61,15 @@ class SatelliteTemporalAggregatorFlow:
         return satellite_temporal_aggregator.execute()
 
 
+class PollutionJoinerFlow:
+    def __init__(self):
+        self.pollution_joiner_config = PollutionJoinerConfig()
+
+    def execute(self):
+        pollution_joiner = PollutionJoiner.from_dataclass_config(self.pollution_joiner_config)
+        return pollution_joiner.execute()
+
+
 class GetGoogleStreetViewFlow:
     def __init__(self):
         self.streetview_config = StreetViewConfig()
@@ -74,9 +92,10 @@ def load_data():
     LoadDataFlow().execute()
 
 
-@click.command("aggregate_satellite_data", help="Aggregate Satellite data temporally")
-def aggregate_satellite_data():
+@click.command("join_satellite_data", help="Join Satelliteand air pollution  data temporally")
+def join_satellite_data():
     SatelliteTemporalAggregatorFlow().execute()
+    PollutionJoinerFlow().execute()
 
 
 @click.command("get_google_streetview", help="Retrieve streetview images for building locations")
@@ -89,10 +108,17 @@ def run_full_pipeline():
     # building_footprint_gdf = GenerateBuildingCentroidsFlow().execute()
     # print(building_footprint_gdf)
     ee.Initialize()
-    sensor_locations_df = pd.read_csv("/home/ubuntu/unicef_work/open-geo-engine/local_data/locations_dehli.csv")
-    gdf = gpd.GeoDataFrame(sensor_locations_df, geometry=gpd.points_from_xy(sensor_locations_df.x, sensor_locations_df.y))
+    sensor_locations_df = pd.read_csv(
+        "/home/ubuntu/unicef_work/open-geo-engine/local_data/locations_dehli.csv"
+    )
+    gdf = gpd.GeoDataFrame(
+        sensor_locations_df,
+        geometry=gpd.points_from_xy(sensor_locations_df.x, sensor_locations_df.y),
+    )
     satellite_data_df = LoadDataFlow().execute_for_country(gdf)
-    satellite_data_df.to_csv("/home/ubuntu/unicef_work/open-geo-engine/local_data/dehli_sensors_sat_no2.csv")
+    satellite_data_df.to_csv(
+        "/home/ubuntu/unicef_work/open-geo-engine/local_data/dehli_sensors_sat_no2.csv"
+    )
     # GetGoogleStreetViewFlow().execute_for_country(satellite_data_df)
 
 
@@ -109,7 +135,7 @@ cli.add_command(generate_building_centroids)
 cli.add_command(load_data)
 cli.add_command(get_google_streetview)
 cli.add_command(run_full_pipeline)
-cli.add_command(aggregate_satellite_data)
+cli.add_command(join_satellite_data)
 
 if __name__ == "__main__":
     cli()
