@@ -1,6 +1,16 @@
 from sklearn.utils.multiclass import type_of_target
 from sklearn import preprocessing
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import RepeatedStratifiedKFold
+from sklearn.impute import SimpleImputer
 
+
+model = RandomForestClassifier()
+imputer = SimpleImputer(add_indicator=True)
+pipeline = Pipeline(steps=[('i', imputer), ('m', model)])
+cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
+
+train_df = pd.read_csv("/home/ubuntu/unicef_work/open-geo-engine/local_data/joined_data/train_nulls.csv")
 data = train_df[
     [
         "Temperature",
@@ -30,6 +40,7 @@ data = train_df[
         "avg_rad",
     ]
 ].values
+le = preprocessing.LabelEncoder()
 train_df["categorical_label"] = le.transform(train_df["AQI"])
 y = train_df["categorical_label"].values
 
