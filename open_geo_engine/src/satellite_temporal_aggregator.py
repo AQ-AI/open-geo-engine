@@ -32,24 +32,27 @@ class SatelliteTemporalAggregator:
 
         satellite_list = []
         for time_aggregation in self.time_aggregations:
-            metric_over_time_df, filepath = Parallel(
-                n_jobs=-1, backend="multiprocessing", verbose=5
-            )(
+            metric_over_time_df = Parallel(n_jobs=-1, backend="multiprocessing", verbose=5)(
                 delayed(self.execute_for_file)(filepath, time_aggregation)
                 for filepath in os.listdir((f"{self.processed_target_df}/{time_aggregation}"))
             )
-            write_csv(
-                metric_over_time_df[0],
-                f"{self.described_dir}/{time_aggregation}/{filepath[:-4]}.csv",
-            )
+            # print(type(metric_over_time_df), metric_over_time_df)
+            # write_csv(
+            #     metric_over_time_df,
+            #     f"{self.described_dir}/{time_aggregation}/{metric_over_time_df[:-4]}.csv",
+            # )
 
     def execute_for_file(self, filepath, time_aggregation):
         satellite_df = read_csv(f"{self.processed_target_df}/{time_aggregation}/{filepath}")
-        satellite_df = self._round_lat_lon(satellite_df)
+        satellite_df = satellite_df.apply(lambda row: self._round_lat_lon(row), axis=1)
         metric_over_time_df = self.calculate_values_over_time_aggregation(
             satellite_df, time_aggregation
         )
-        return metric_over_time_df, filepath
+        write_csv(
+            metric_over_time_df,
+            f"{self.described_dir}/{time_aggregation}/{filepath[:-4]}.csv",
+        )
+        # return metric_over_time_df
 
     def calculate_values_over_time_aggregation(self, satellite_df, time_aggregation):
         if time_aggregation == "date":
@@ -58,25 +61,17 @@ class SatelliteTemporalAggregator:
             satellite_grpby = (
                 satellite_df.groupby(["datetime", "latitude", "longitude"]).mean().reset_index()
             )
-            satellite_grpby["timestamp"] = satellite_grpby.apply(
-                lambda row: self._get_dately_timestamp(row), axis=1
-            )
-
         else:
-            satellite_df["datetime"] = pd.to_datetime(satellite_df["datetime"]).dt.to_period("M")
+            satellite_df["month"] = pd.to_datetime(satellite_df["datetime"]).dt.to_period("M")
             satellite_grpby = (
-                satellite_df.groupby(["datetime", "latitude", "longitude"]).mean().reset_index()
+                satellite_df.groupby(["month", "latitude", "longitude"]).mean().reset_index()
             )
-            satellite_grpby["timestamp"] = satellite_grpby.apply(
-                lambda row: self._get_monthly_timestamp(row), axis=1
-            )
-
         return satellite_grpby
 
-    def _round_lat_lon(self, satellite_df):
-        satellite_df["longitude"] = satellite_df.longitude.round(4)
-        satellite_df["latitude"] = satellite_df.latitude.round(4)
-        return satellite_df
+    def _round_lat_lon(self, row):
+        row["longitude"] = format(float(row["longitude"]), ".4f")
+        row["latitude"] = format(float(row["latitude"]), ".4f")
+        return row
 
     def _get_year_from_files(self, row):
         """Filter filenames based on IDs and publication dates"""

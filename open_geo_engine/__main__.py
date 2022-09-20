@@ -84,7 +84,10 @@ class GetGoogleStreetViewFlow:
 
 @click.command("generate_building_centroids", help="Retrieve building centroids")
 def generate_building_centroids():
-    GenerateBuildingCentroidsFlow().execute()
+    osm_df = GenerateBuildingCentroidsFlow().execute()
+    osm_df.to_csv(
+        "/home/ubuntu/unicef_work/open-geo-engine/local_data/osm_data/saudi_arabia_cafe.csv"
+    )
 
 
 @click.command("load_data", help="Load data from Google Earth Engine")
