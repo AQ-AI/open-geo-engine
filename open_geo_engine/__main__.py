@@ -86,7 +86,7 @@ class GetGoogleStreetViewFlow:
 def generate_building_centroids():
     osm_df = GenerateBuildingCentroidsFlow().execute()
     osm_df.to_csv(
-        "/home/ubuntu/unicef_work/open-geo-engine/local_data/osm_data/saudi_arabia_cafe.csv"
+        "/home/ubuntu/unicef_work/open-geo-engine/local_data/osm_data/saudi_arabia_all.csv"
     )
 
 

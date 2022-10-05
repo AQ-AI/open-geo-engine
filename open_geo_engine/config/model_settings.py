@@ -12,8 +12,8 @@ class PollutionJoinerConfig:
     location_file = "/home/ubuntu/unicef_work/open-geo-engine/local_data/locations_dehli.csv"
     satellite_dir = "/home/ubuntu/unicef_work/open-geo-engine/local_data/aggregated_data"
     pollution_dir = "/home/ubuntu/unicef_work/open-geo-engine/local_data/pollution_data"
-    time_aggregations: Sequence[str] = field(default_factory=lambda: ["date", "month"])
     joined_dir = "/home/ubuntu/unicef_work/open-geo-engine/local_data/joined_data"
+    time_aggregations: Sequence[str] = field(default_factory=lambda: ["date", "month"])
 
 
 @dataclass
@@ -22,6 +22,37 @@ class SatelliteTemporalAggregatorConfig:
     described_dir = "/home/ubuntu/unicef_work/open-geo-engine/local_data/aggregated_data"
     time_aggregations: Sequence[str] = field(default_factory=lambda: ["date", "month"])
 
+@dataclass
+class TrainModelConfig:
+    model_names_list: Sequence[str] = field(default_factory=lambda: ["RFC"])
+    target_variable: str = "AQI"
+    features_cols: Sequence[str] = field(default_factory=lambda: [
+        "Temperature",
+        "Humidity",
+        "feels_like",
+        "temp_min",
+        "temp_max",
+        "pressure",
+        "wind_speed",
+        "wind_deg",
+        "rain",
+        "clouds_all",
+        "weather",
+        "AQI",
+        "longitude",
+        "latitude",
+        "NO2_column_number_density",
+        "cloud_fraction",
+        "time",
+        "AOD_Uncertainty",
+        "Column_WV",
+        "Optical_Depth_047",
+        "Optical_Depth_055",
+        "B2",
+        "B3",
+        "B4",
+        "avg_rad",
+    ])
 
 @dataclass
 class StreetViewConfig:
@@ -38,8 +69,8 @@ class StreetViewConfig:
 
 @dataclass
 class OSMConfig:
-    TAGS = {"building": "school"}
-    PLACE = "Belize"
+    TAGS = {"amenity": ["restaurant", "bar", "fast_food", "cafe"]}
+    PLACE = "Saudi Arabia"
     # NAME = "Iraqi Kurdistan"
     # ADMIN_LEVEL = 3
 
