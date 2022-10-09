@@ -75,11 +75,11 @@ lint: lint-pylama lint-black isort
 
 lint-black:
 	@echo -e "linting with black.."
-	@poetry run black . --line-length=100 --check --exclude /.venv
+	@poetry run black . --line-length=100 --exclude /.venv
 
 lint-pylama:
 	@echo -e "linting with pylama.."
-	@poetry run pylama  --skip .venv/*
+	@poetry run pylama  --skip .venv/* open-geo-engine/local_data/
 
 isort:
 	@echo -e "Sorting all imports.."
