@@ -16,30 +16,30 @@ class StreetViewConfig:
     LOCAL_IMAGE_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent.parent.parent.parent.parent.parent}/local_data/streetview_images"
     LOCAL_LINKS_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent.parent.parent.parent.parent.parent}/local_data/streetview_links"
     LOCAL_METADATA_FOLDER: str = f"{Path(__file__).resolve().parent.parent.parent.parent.parent.parent.parent.parent}/local_data/streetview_metadata"
-    PLACE = "Belize"
+    PLACE = "Iraq"
     META_BASE = "https://maps.googleapis.com/maps/api/streetview/metadata?"
 
 
 @dataclass
 class OSMConfig:
     TAGS = {"building": "school"}
-    PLACE = "Belize"
+    PLACE = "Iraq"
 
 
 @dataclass
 class DataConfig:
-    COUNTRY_CODES = ["BZ"]
-    YEAR: int = 2021
-    MON_START: int = 1
-    DATE_START: int = 31
-    YEAR_END: int = 2022
-    MON_END: int = 2
-    DATE_END: int = 4
-    PLACE = "Belize"
+    COUNTRY_CODES = ["IN"]
+    YEAR: int = 2019
+    MON_START: int = 3
+    DATE_START: int = 13
+    YEAR_END: int = 2020
+    MON_END: int = 7
+    DATE_END: int = 31
+    PLACE = "Iraq"
     BASE_FOLDER = "/ee_data"
 
     LANDSAT_IMAGE_COLLECTION: str = "LANDSAT/LC08/C01/T1"
-    MODEL_NAME = "AOD"
+    MODEL_NAME = "GFS0P25"
     LANDSAT_IMAGE_BAND: Sequence[str] = field(
         default_factory=lambda: ["B4", "B3", "B2"]
     )
@@ -55,8 +55,6 @@ class DataConfig:
         default_factory=lambda: [
             "temperature_2m_above_ground",
             "relative_humidity_2m_above_ground",
-            "total_precipitation_surface",
-            "total_cloud_cover_entire_atmosphere",
             "u_component_of_wind_10m_above_ground",
             "v_component_of_wind_10m_above_ground",
         ]

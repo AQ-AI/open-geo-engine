@@ -27,19 +27,19 @@ class LoadDataFlow:
     def __init__(self):
         self.config = DataConfig()
 
-    def execute(self, building_footprint_gdf):
+    def execute(self, filepath):
+        # Trigger the authentication flow.
+        data_loader = LoadEEData.from_dataclass_config(self.config)
+        if filepath:
+            data_loader.filepath = filepath
+        data_loader.execute(save_images=False)
+
+    def execute_for_country(self, **kwargs):
         # Trigger the authentication flow.
         ee.Authenticate()
         data_loader = LoadEEData.from_dataclass_config(self.config)
 
-        data_loader.execute(building_footprint_gdf, save_images=False)
-
-    def execute_for_country(self):
-        # Trigger the authentication flow.
-        ee.Authenticate()
-        data_loader = LoadEEData.from_dataclass_config(self.config)
-
-        return data_loader.execute_for_country(save_images=False)
+        return data_loader.execute_for_country(kwargs, save_images=True)
 
 
 class GetGoogleStreetViewFlow:
@@ -62,8 +62,9 @@ def generate_building_centroids():
 
 
 @click.command("load_data", help="Load data from Google Earth Engine")
-def load_data():
-    LoadDataFlow().execute()
+@click.argument("filepath")
+def load_data(filepath):
+    LoadDataFlow().execute(filepath)
 
 
 @click.command(
@@ -80,7 +81,8 @@ def run_full_pipeline(path_to_local_data):
     building_footprint_gdf.to_csv(
         f"{path_to_local_data}/osm_data/building_footprint.csv"
     )
-    satellite_data_df = LoadDataFlow().execute(building_footprint_gdf)
+
+    LoadDataFlow().execute(f"{path_to_local_data}/osm_data/building_footprint.csv")
     # GetGoogleStreetViewFlow().execute_for_df(satellite_data_df)
 
 

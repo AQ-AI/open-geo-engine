@@ -4,7 +4,6 @@ from open_geo_engine.src.load_ee_data import LoadEEData
 
 def test_prepare_dates():
     countries = ["ES"]
-    place = "Parque El Retiro, Madrid"
     year = 2020
     mon_start = 1
     date_start = 1
@@ -29,7 +28,6 @@ def test_prepare_dates():
         folder,
         image_folder,
         model_name,
-        place,
     )
 
     assert len(load_ee_data._generate_start_end_date()) == 2
@@ -68,7 +66,6 @@ def test_get_xy():
         folder,
         image_folder,
         model_name,
-        place,
     )
     xy_df = load_ee_data._get_xy(buildings_gdf)[["x", "y"]]
     assert xy_df["x"][0] == -3.68328454639349
