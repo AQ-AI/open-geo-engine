@@ -28,7 +28,7 @@ class OSMConfig:
 
 @dataclass
 class DataConfig:
-    COUNTRY_CODES = ["IN"]
+    COUNTRY_CODES = ["IQ"]
     YEAR: int = 2019
     MON_START: int = 3
     DATE_START: int = 13

@@ -1,14 +1,14 @@
 import click
 import ee
 
-from open_geo_engine.config.model_settings import (
+from config.model_settings import (
     DataConfig,
     OSMConfig,
     StreetViewConfig,
 )
-from open_geo_engine.src.generate_building_centroids import GenerateBuildingCentroids
-from open_geo_engine.src.get_google_streetview import GetGoogleStreetView
-from open_geo_engine.src.load_ee_data import LoadEEData
+from src.generate_building_centroids import GenerateBuildingCentroids
+from src.get_google_streetview import GetGoogleStreetView
+from src.load_ee_data import LoadEEData
 
 
 class GenerateBuildingCentroidsFlow:
@@ -56,7 +56,9 @@ class GetGoogleStreetViewFlow:
         return streetview_downloader.execute_for_df(satellite_data_df)
 
 
-@click.command("generate_building_centroids", help="Retrieve building centroids")
+@click.command(
+    "generate_building_centroids", help="Retrieve building centroids"
+)
 def generate_building_centroids():
     GenerateBuildingCentroidsFlow().execute()
 
@@ -68,7 +70,8 @@ def load_data(filepath):
 
 
 @click.command(
-    "get_google_streetview", help="Retrieve streetview images for building locations"
+    "get_google_streetview",
+    help="Retrieve streetview images for building locations",
 )
 def get_google_streetview(satellite_data_df):
     GetGoogleStreetViewFlow().execute_for_country(satellite_data_df)
@@ -82,13 +85,18 @@ def run_full_pipeline(path_to_local_data):
         f"{path_to_local_data}/osm_data/building_footprint.csv"
     )
 
-    LoadDataFlow().execute(f"{path_to_local_data}/osm_data/building_footprint.csv")
+    LoadDataFlow().execute(
+        f"{path_to_local_data}/osm_data/building_footprint.csv"
+    )
     # GetGoogleStreetViewFlow().execute_for_df(satellite_data_df)
 
 
 @click.group(
     "open-geo-engine",
-    help="Library aiming to integrate disparate satellite, and geospatial datasets for pollution modelling",
+    help=(
+        "Library aiming to integrate disparate satellite, and geospatial"
+        " datasets for pollution modelling"
+    ),
 )
 @click.pass_context
 def cli(ctx):
