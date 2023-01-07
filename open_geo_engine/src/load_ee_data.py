@@ -11,8 +11,8 @@ from ee.ee_exception import EEException
 from googleapiclient.errors import HttpError
 from joblib import Parallel, delayed
 
-from open_geo_engine.config.model_settings import DataConfig
-from open_geo_engine.utils.utils import ee_array_to_df
+from config.model_settings import DataConfig
+from utils.utils import ee_array_to_df
 
 
 class LoadEEData:
@@ -75,13 +75,14 @@ class LoadEEData:
         )
 
     def execute_for_country(self, country, save_images):
-        logging.info(f"Downloading {self.model_name} data for {country[0]}")
+        print(f"Downloading {self.model_name} data for {country[0]}")
         ee.Initialize()
         coords_tup = country[1]
         s_datetime, e_datetime = self._generate_start_end_date()
         geom = ee.Algorithms.GeometryConstructors.BBox(
             coords_tup[0], coords_tup[1], coords_tup[2], coords_tup[3]
         )
+        print(geom)
 
         collection = (
             ee.ImageCollection(self.image_collection)
@@ -96,7 +97,9 @@ class LoadEEData:
             out_dir=f"{self.image_folder}/{self.model_name}_{s_date}_{e_date}_{country[0]}",
         )
         if save_images:
-            self.save_images_to_drive(collection, s_datetime, e_datetime, country)
+            self.save_images_to_drive(
+                collection, s_datetime, e_datetime, country
+            )
 
         if self.filepath:
             locations_gdf = pd.read_csv(self.filepath)
@@ -104,8 +107,10 @@ class LoadEEData:
             locations_ee_list = []
             for lon, lat in zip(locations_gdf.x, locations_gdf.y):
                 centroid_point = ee.Geometry.Point(lon, lat)
-                landsat_centroid_point = self._get_centroid_value_from_collection(
-                    collection, centroid_point
+                landsat_centroid_point = (
+                    self._get_centroid_value_from_collection(
+                        collection, centroid_point
+                    )
                 )
 
                 ee_df = ee_array_to_df(landsat_centroid_point, self.image_band)
@@ -120,7 +125,9 @@ class LoadEEData:
             else:
                 return pd.concat(locations_ee_list)
 
-    def save_images_to_drive(self, collection, s_datetime, e_datetime, country):
+    def save_images_to_drive(
+        self, collection, s_datetime, e_datetime, country
+    ):
         s_date = s_datetime.date()
         e_date = e_datetime.date()
         geemap.ee_export_image_collection(
@@ -152,9 +159,9 @@ class LoadEEData:
 
     def _get_xy(self, locations_gdf):
         try:
-            locations_gdf["centroid_geometry"] = locations_gdf["centroid_geometry"].map(
-                shapely.wkt.loads
-            )
+            locations_gdf["centroid_geometry"] = locations_gdf[
+                "centroid_geometry"
+            ].map(shapely.wkt.loads)
 
         except TypeError:
             pass
