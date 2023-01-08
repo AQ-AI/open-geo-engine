@@ -5,8 +5,8 @@ import google_streetview.helpers
 import pandas as pd
 import requests
 
-from config.model_settings import StreetViewConfig
-from utils.utils import write_csv
+from open_geo_engine.config.model_settings import StreetViewConfig
+from open_geo_engine.utils.utils import write_csv
 
 
 class GetGoogleStreetView:
@@ -58,10 +58,14 @@ class GetGoogleStreetView:
     def execute_for_df(self, satellite_data_df):
         lat_lon_str = self.generate_lat_lon_string(satellite_data_df)
         params = self._generate_params(lat_lon_str)
-        results = self.get_google_streetview(google_streetview.helpers.api_list(params))
+        results = self.get_google_streetview(
+            google_streetview.helpers.api_list(params)
+        )
         self.save_streetview_information(results)
 
-        satellite_streetview_data_df = self.add_links_to_satellite_df(satellite_data_df)
+        satellite_streetview_data_df = self.add_links_to_satellite_df(
+            satellite_data_df
+        )
 
         satellite_streetview_metadata_df = self.add_metadata_to_satellite_df(
             satellite_streetview_data_df
@@ -90,18 +94,20 @@ class GetGoogleStreetView:
         results.save_metadata(f"{self.metadata_file}")
 
     def add_links_to_satellite_df(self, satellite_data_df):
-        satellite_data_df["lat_lon_str"] = self._join_lat_lon(satellite_data_df)
+        satellite_data_df["lat_lon_str"] = self._join_lat_lon(
+            satellite_data_df
+        )
         street_view_links_df = pd.read_csv(
             f"{self.links_file}",
             lineterminator="\n",
             names=["URL"],
         )
-        street_view_links_df["latitude"] = street_view_links_df["URL"].str.extract(
-            "location=(.*)%2C"
-        )
-        street_view_links_df["longitude"] = street_view_links_df["URL"].str.extract(
-            "%2C(.*)&pitch"
-        )
+        street_view_links_df["latitude"] = street_view_links_df[
+            "URL"
+        ].str.extract("location=(.*)%2C")
+        street_view_links_df["longitude"] = street_view_links_df[
+            "URL"
+        ].str.extract("%2C(.*)&pitch")
         street_view_links_df[["latitude", "longitude"]] = street_view_links_df[
             ["latitude", "longitude"]
         ].apply(pd.to_numeric, errors="coerce")

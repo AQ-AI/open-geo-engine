@@ -5,7 +5,7 @@ import osmnx as ox
 import pandas as pd
 from joblib import Parallel, delayed
 
-from config.model_settings import DataConfig, OSMConfig
+from open_geo_engine.config.model_settings import DataConfig, OSMConfig
 
 
 class GenerateBuildingCentroids:
@@ -27,10 +27,14 @@ class GenerateBuildingCentroids:
     ) -> "GenerateBuildingCentroids":
         countries = []
         for country in data_config.COUNTRY_CODES:
-            country_info = data_config.COUNTRY_BOUNDING_BOXES.get(country, "WO")
+            country_info = data_config.COUNTRY_BOUNDING_BOXES.get(
+                country, "WO"
+            )
             countries.append(country_info)
 
-        return cls(countries=countries, place=osm_config.PLACE, tags=osm_config.TAGS)
+        return cls(
+            countries=countries, place=osm_config.PLACE, tags=osm_config.TAGS
+        )
 
     def execute(self, **kwargs):
         print(f"Downloading {self.tags} for {self.place}")

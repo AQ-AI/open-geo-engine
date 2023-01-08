@@ -1,14 +1,16 @@
 import click
 import ee
 
-from config.model_settings import (
+from open_geo_engine.config.model_settings import (
     DataConfig,
     OSMConfig,
     StreetViewConfig,
 )
-from src.generate_building_centroids import GenerateBuildingCentroids
-from src.get_google_streetview import GetGoogleStreetView
-from src.load_ee_data import LoadEEData
+from open_geo_engine.src.generate_building_centroids import (
+    GenerateBuildingCentroids,
+)
+from open_geo_engine.src.get_google_streetview import GetGoogleStreetView
+from open_geo_engine.src.load_ee_data import LoadEEData
 
 
 class GenerateBuildingCentroidsFlow:
@@ -56,7 +58,9 @@ class GetGoogleStreetViewFlow:
         return streetview_downloader.execute_for_df(satellite_data_df)
 
 
-@click.command("generate_building_centroids", help="Retrieve building centroids")
+@click.command(
+    "generate_building_centroids", help="Retrieve building centroids"
+)
 def generate_building_centroids():
     GenerateBuildingCentroidsFlow().execute()
 
@@ -83,7 +87,9 @@ def run_full_pipeline(path_to_local_data):
         f"{path_to_local_data}/osm_data/building_footprint.csv"
     )
 
-    LoadDataFlow().execute(f"{path_to_local_data}/osm_data/building_footprint.csv")
+    LoadDataFlow().execute(
+        f"{path_to_local_data}/osm_data/building_footprint.csv"
+    )
     # GetGoogleStreetViewFlow().execute_for_df(satellite_data_df)
 
 
