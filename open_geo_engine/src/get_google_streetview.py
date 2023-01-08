@@ -41,7 +41,10 @@ class GetGoogleStreetView:
             pitch=streetview_config.PITCH,
             key=streetview_config.KEY,
             image_folder=streetview_config.LOCAL_IMAGE_FOLDER,
-            links_file=open(f"{streetview_config.LOCAL_LINKS_FOLDER}/streetview_links.txt", "w"),
+            links_file=open(
+                f"{streetview_config.LOCAL_LINKS_FOLDER}/streetview_links.txt",
+                "w",
+            ),
             metadata_file=open(
                 f"{streetview_config.LOCAL_METADATA_FOLDER}/streetview_metadata.json",
                 "w",
@@ -50,7 +53,7 @@ class GetGoogleStreetView:
             meta_base=streetview_config.META_BASE,
         )
 
-    def execute_for_country(self, satellite_data_df):
+    def execute_for_df(self, satellite_data_df):
         lat_lon_str = self.generate_lat_lon_string(satellite_data_df)
         params = self._generate_params(lat_lon_str)
         results = self.get_google_streetview(google_streetview.helpers.api_list(params))

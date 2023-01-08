@@ -17,7 +17,18 @@ Air pollution is a real-time phenomena, and understanding our changing exposure 
 - Google account
 - Access to the Google Cloud Platform
 2. Enable Billing using these [instructions](https://cloud.google.com/billing/docs/how-to/modify-project) in the Google Cloud Project you activated the streetview API in.
+# Production setup
+## Authenticating with `gcloud` (on a cloud machine with no browser)
+```
+ earthengine authenticate --quiet
+```
+and paste the command in your local machine's terminal  (it will look something like the following):
+```
+gcloud auth application-default login --remote-bootstrap="https://..."
+```
 
+
+After authenticating with your
 ## :package: Requirements
 - Python > 3.8. If you have not yet installed python/a python version > 3.8 then see these [instructions](https://blog.jayway.com/2019/12/28/pyenv-poetry-saviours-in-the-python-chaos/) to complete an installation.
 - This project uses `poetry` for package management. See [here](https://python-poetry.org/docs/) for installation instructions

@@ -1,5 +1,6 @@
 import datetime
 from typing import Any, Sequence, Tuple
+import logging
 
 import ee
 import geemap
@@ -28,7 +29,7 @@ class LoadEEData:
         folder: str,
         image_folder: str,
         model_name: str,
-        place: str,
+        **kwargs,
     ):
         self.countries = countries
         self.year = year
@@ -42,7 +43,6 @@ class LoadEEData:
         self.folder = folder
         self.image_folder = image_folder
         self.model_name = model_name
-        self.place = place
 
     @classmethod
     def from_dataclass_config(cls, config: DataConfig) -> "LoadEEData":
@@ -59,62 +59,80 @@ class LoadEEData:
             year_end=config.YEAR_END,
             mon_end=config.MON_END,
             date_end=config.DATE_END,
-            image_collection=config.LANDSAT_IMAGE_COLLECTION,
-            image_band=config.LANDSAT_IMAGE_BAND,
+            image_collection=config.METEROLOGICAL_IMAGE_COLLECTION,
+            image_band=config.METEROLOGICAL_IMAGE_BAND,
             folder=config.BASE_FOLDER,
             image_folder=config.IMAGE_FOLDER,
             model_name=config.MODEL_NAME,
             place=config.PLACE,
         )
 
-    def execute(self, filepath, save_images):
-        building_footprint_gdf = pd.read_csv(filepath)
-
+    def execute(self, save_images):
         Parallel(n_jobs=-1, backend="multiprocessing", verbose=5)(
-            delayed(self.execute_for_country)(building_footprint_gdf, save_images)
-            for country in self.countries
+            delayed(self.execute_for_country)(country, save_images) for country in self.countries
         )
 
-    def execute_for_country(self, building_footprint_gdf, save_images):
-        print(f"Downloading {self.model_name} data for {self.place}")
-        building_footprint_gdf = self._get_xy(building_footprint_gdf)
-        building_footprints_satellite_list = []
-        for lon, lat in zip(building_footprint_gdf.x, building_footprint_gdf.y):
-            # Initialize the library.
-            ee.Initialize()
-            centroid_point = ee.Geometry.Point(lon, lat)
-            s_datetime, e_datetime = self._generate_start_end_date()
-            collection = (
-                ee.ImageCollection(self.image_collection)
-                .filterBounds(centroid_point)
-                .select(self.image_band)
-                .filterDate(s_datetime, e_datetime)
-            )
-            landsat_centroid_point = self._get_centroid_value_from_collection(
-                collection, centroid_point
-            )
-            building_footprints_satellite_list.append(
-                ee_array_to_df(landsat_centroid_point, self.image_band)
-            )
-            if save_images is True:
-                self.save_images_to_drive(collection, s_datetime, e_datetime, lon, lat)
-        return pd.concat(building_footprints_satellite_list)
+    def execute_for_country(self, country, save_images):
+        logging.info(f"Downloading {self.model_name} data for {country[0]}")
+        ee.Initialize()
+        coords_tup = country[1]
+        s_datetime, e_datetime = self._generate_start_end_date()
+        geom = ee.Algorithms.GeometryConstructors.BBox(
+            coords_tup[0], coords_tup[1], coords_tup[2], coords_tup[3]
+        )
 
-    def save_images_to_drive(self, collection, s_datetime, e_datetime, lon, lat):
         s_date = s_datetime.date()
         e_date = e_datetime.date()
-        lon_without_symbol = self._replace_symbol(lon)
-        lat_without_symbol = self._replace_symbol(lat)
+
+        collection = (
+            ee.ImageCollection(self.image_collection)
+            .filterBounds(geom)
+            .filterDate(str(s_date), str(e_date))
+            .select(self.image_band)
+        )
+
+        if save_images:
+            self.save_images_to_drive(collection, s_datetime, e_datetime, country)
+
+        if self.filepath:
+            locations_gdf = pd.read_csv(self.filepath)
+            # locations_gdf = self._get_xy(locations_gdf)
+            locations_ee_list = []
+            for lon, lat in zip(locations_gdf.x, locations_gdf.y):
+                centroid_point = ee.Geometry.Point(lon, lat)
+                satellite_centroid_point = self._get_centroid_value_from_collection(
+                    collection, centroid_point
+                )
+                try:
+                    ee_df = ee_array_to_df(satellite_centroid_point, self.image_band)
+                    if not ee_df.empty:
+                        locations_ee_list.append(ee_df)
+                except IndexError:
+                    pass
+            if len(self.countries) == 1:
+
+                locations_ee_df = pd.concat(locations_ee_list)
+                locations_ee_df.to_csv(f"local_data/gee_data/{country[0]}_{self.model_name}.csv")
+                return locations_ee_df
+            else:
+                return pd.concat(locations_ee_list)
+
+    def save_images_to_drive(self, collection, s_datetime, e_datetime, country):
+        s_date = s_datetime.date()
+        e_date = e_datetime.date()
         geemap.ee_export_image_collection(
             collection,
-            out_dir=f"{self.image_folder}/{self.model_name}_{s_date}_{e_date}_{lat_without_symbol}_{lon_without_symbol}",
+            out_dir=f"{self.image_folder}/{self.model_name}_{s_date}_{e_date}_{country}",
         )
 
     def _get_centroid_value_from_collection(self, collection, centroid_point):
         try:
             return collection.getRegion(centroid_point, 10).getInfo()
         except (EEException, HttpError):
-            print(centroid_point)
+            logging.warning(
+                f"""Centroid location {centroid_point}
+                table does not match any existing location."""
+            )
             pass
 
     def _generate_start_end_date(self) -> Tuple[datetime.date, datetime.date]:
@@ -129,18 +147,18 @@ class LoadEEData:
     def _generate_dates(self, date_list) -> Sequence[str]:
         return [str(date) for date in date_list]
 
-    def _get_xy(self, building_footprint_gdf):
+    def _get_xy(self, locations_gdf):
         try:
-            building_footprint_gdf["centroid_geometry"] = building_footprint_gdf[
-                "centroid_geometry"
-            ].map(shapely.wkt.loads)
+            locations_gdf["centroid_geometry"] = locations_gdf["centroid_geometry"].map(
+                shapely.wkt.loads
+            )
 
         except TypeError:
             pass
 
-        building_footprint_gdf["x"] = building_footprint_gdf.centroid_geometry.map(lambda p: p.x)
-        building_footprint_gdf["y"] = building_footprint_gdf.centroid_geometry.map(lambda p: p.y)
-        return building_footprint_gdf
+        locations_gdf["x"] = locations_gdf.centroid_geometry.map(lambda p: p.x)
+        locations_gdf["y"] = locations_gdf.centroid_geometry.map(lambda p: p.y)
+        return locations_gdf
 
     def _replace_symbol(self, item):
         return str(item).replace(".", "_")
