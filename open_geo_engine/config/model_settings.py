@@ -1,9 +1,8 @@
 import os
 from dataclasses import field
 from pathlib import Path
-from typing import Dict, Sequence, Tuple
+from typing import Sequence
 
-from pydantic import StrictStr
 from pydantic.dataclasses import dataclass
 
 
@@ -45,9 +44,7 @@ class DataConfig:
     )
 
     AOD_IMAGE_COLLECTION: str = "MODIS/006/MCD19A2_GRANULES"
-    AOD_IMAGE_BAND: Sequence[str] = field(
-        default_factory=lambda: ["Optical_Depth_047"]
-    )
+    AOD_IMAGE_BAND: Sequence[str] = field(default_factory=lambda: ["Optical_Depth_047"])
 
     NIGHTTIME_LIGHT_IMAGE_COLLECTION: str = "NOAA/VIIRS/DNB/MONTHLY_V1/VCMCFG"
     NIGHTTIME_LIGHT_IMAGE_BAND: str = "avg_rad"
@@ -67,9 +64,7 @@ class DataConfig:
     )
     POPULATION_IMAGE_BAND = "basic_demographic_characteristics"
 
-    LAND_COVER_IMAGE_COLLECTION: str = (
-        "COPERNICUS/Landcover/100m/Proba-V-C3/Global"
-    )
+    LAND_COVER_IMAGE_COLLECTION: str = "COPERNICUS/Landcover/100m/Proba-V-C3/Global"
     LAND_COVER_IMAGE_BAND: str = "discrete_classification"
     IMAGE_FOLDER = "local_data/image_folder"
 

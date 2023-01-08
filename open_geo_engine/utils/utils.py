@@ -34,7 +34,9 @@ def read_csv(path: str, **kwargs: Any) -> pd.DataFrame:
     Read csv ensuring that nan's are not parsed
     """
 
-    return pd.read_csv(path, sep=",", low_memory=False, encoding="utf-8", na_filter=False, **kwargs)
+    return pd.read_csv(
+        path, sep=",", low_memory=False, encoding="utf-8", na_filter=False, **kwargs
+    )
 
 
 def write_csv(df: pd.DataFrame, path: str, **kwargs: Any) -> None:
@@ -62,4 +64,6 @@ def write_dataclass(dclass: object, path: str) -> None:
 
     """
     with open(path, "w+") as f:
-        f.write(json.dumps(dclass, indent=4, ensure_ascii=True, default=pydantic_encoder))
+        f.write(
+            json.dumps(dclass, indent=4, ensure_ascii=True, default=pydantic_encoder)
+        )

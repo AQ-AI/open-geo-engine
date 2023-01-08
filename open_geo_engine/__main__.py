@@ -56,9 +56,7 @@ class GetGoogleStreetViewFlow:
         return streetview_downloader.execute_for_df(satellite_data_df)
 
 
-@click.command(
-    "generate_building_centroids", help="Retrieve building centroids"
-)
+@click.command("generate_building_centroids", help="Retrieve building centroids")
 def generate_building_centroids():
     GenerateBuildingCentroidsFlow().execute()
 
@@ -85,9 +83,7 @@ def run_full_pipeline(path_to_local_data):
         f"{path_to_local_data}/osm_data/building_footprint.csv"
     )
 
-    LoadDataFlow().execute(
-        f"{path_to_local_data}/osm_data/building_footprint.csv"
-    )
+    LoadDataFlow().execute(f"{path_to_local_data}/osm_data/building_footprint.csv")
     # GetGoogleStreetViewFlow().execute_for_df(satellite_data_df)
 
 

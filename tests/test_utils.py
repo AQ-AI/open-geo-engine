@@ -73,7 +73,9 @@ def test_ee_array_to_df():
             model_name,
         )._date_range(start, end)
 
-        with patch("open_geo_engine.src.load_ee_data.LoadEEData._generate_dates") as generate_dates:
+        with patch(
+            "open_geo_engine.src.load_ee_data.LoadEEData._generate_dates"
+        ) as generate_dates:
             generate_dates.return_value = [
                 "2020-01-01",
                 "2020-01-08",
