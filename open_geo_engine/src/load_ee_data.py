@@ -59,17 +59,15 @@ class LoadEEData:
             year_end=config.YEAR_END,
             mon_end=config.MON_END,
             date_end=config.DATE_END,
-            image_collection=config.LANDSAT_IMAGE_COLLECTION,
-            image_band=config.LANDSAT_IMAGE_BAND,
+            image_collection=config.NO2_IMAGE_COLLECTION,
+            image_band=config.NO_IMAGE_BAND,
             folder=config.BASE_FOLDER,
             image_folder=config.IMAGE_FOLDER,
             model_name=config.MODEL_NAME,
             place=config.PLACE,
         )
 
-    def execute(self, filepath, save_images):
-        building_footprint_gdf = pd.read_csv(filepath)
-
+    def execute(self, building_footprint_gdf, save_images):
         Parallel(n_jobs=-1, backend="multiprocessing", verbose=5)(
             delayed(self.execute_for_country)(building_footprint_gdf, save_images)
             for country in self.countries
@@ -77,11 +75,10 @@ class LoadEEData:
 
     def execute_for_country(self, building_footprint_gdf, save_images):
         print(f"Downloading {self.model_name} data for {self.place}")
-        building_footprint_gdf = self._get_xy(building_footprint_gdf)
+        # building_footprint_gdf = self._get_xy(building_footprint_gdf)
         building_footprints_satellite_list = []
         for lon, lat in zip(building_footprint_gdf.x, building_footprint_gdf.y):
             # Initialize the library.
-            ee.Initialize()
             centroid_point = ee.Geometry.Point(lon, lat)
             s_datetime, e_datetime = self._generate_start_end_date()
             collection = (
