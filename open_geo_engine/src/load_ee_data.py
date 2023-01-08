@@ -75,27 +75,24 @@ class LoadEEData:
         )
 
     def execute_for_country(self, country, save_images):
-        print(f"Downloading {self.model_name} data for {country[0]}")
+        logging.info(f"Downloading {self.model_name} data for {country[0]}")
         ee.Initialize()
         coords_tup = country[1]
         s_datetime, e_datetime = self._generate_start_end_date()
         geom = ee.Algorithms.GeometryConstructors.BBox(
             coords_tup[0], coords_tup[1], coords_tup[2], coords_tup[3]
         )
-        print(geom)
+
+        s_date = s_datetime.date()
+        e_date = e_datetime.date()
 
         collection = (
             ee.ImageCollection(self.image_collection)
             .filterBounds(geom)
+            .filterDate(str(s_date), str(e_date))
             .select(self.image_band)
         )
-        s_date = s_datetime.date()
-        e_date = e_datetime.date()
 
-        geemap.ee_export_image_collection(
-            collection,
-            out_dir=f"{self.image_folder}/{self.model_name}_{s_date}_{e_date}_{country[0]}",
-        )
         if save_images:
             self.save_images_to_drive(
                 collection, s_datetime, e_datetime, country
@@ -107,16 +104,21 @@ class LoadEEData:
             locations_ee_list = []
             for lon, lat in zip(locations_gdf.x, locations_gdf.y):
                 centroid_point = ee.Geometry.Point(lon, lat)
-                landsat_centroid_point = (
+                satellite_centroid_point = (
                     self._get_centroid_value_from_collection(
                         collection, centroid_point
                     )
                 )
-
-                ee_df = ee_array_to_df(landsat_centroid_point, self.image_band)
-                if not ee_df.empty:
-                    locations_ee_list.append(ee_df)
+                try:
+                    ee_df = ee_array_to_df(
+                        satellite_centroid_point, self.image_band
+                    )
+                    if not ee_df.empty:
+                        locations_ee_list.append(ee_df)
+                except IndexError:
+                    pass
             if len(self.countries) == 1:
+
                 locations_ee_df = pd.concat(locations_ee_list)
                 locations_ee_df.to_csv(
                     f"local_data/gee_data/{country[0]}_{self.model_name}.csv"

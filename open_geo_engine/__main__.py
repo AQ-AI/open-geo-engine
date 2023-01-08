@@ -39,7 +39,7 @@ class LoadDataFlow:
         ee.Authenticate()
         data_loader = LoadEEData.from_dataclass_config(self.config)
 
-        return data_loader.execute_for_country(kwargs, save_images=True)
+        return data_loader.execute_for_country(kwargs, save_images=False)
 
 
 class GetGoogleStreetViewFlow:
