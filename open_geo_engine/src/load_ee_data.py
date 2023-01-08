@@ -69,8 +69,7 @@ class LoadEEData:
 
     def execute(self, save_images):
         Parallel(n_jobs=-1, backend="multiprocessing", verbose=5)(
-            delayed(self.execute_for_country)(country, save_images)
-            for country in self.countries
+            delayed(self.execute_for_country)(country, save_images) for country in self.countries
         )
 
     def execute_for_country(self, country, save_images):
@@ -93,9 +92,7 @@ class LoadEEData:
         )
 
         if save_images:
-            self.save_images_to_drive(
-                collection, s_datetime, e_datetime, country
-            )
+            self.save_images_to_drive(collection, s_datetime, e_datetime, country)
 
         if self.filepath:
             locations_gdf = pd.read_csv(self.filepath)
@@ -103,15 +100,11 @@ class LoadEEData:
             locations_ee_list = []
             for lon, lat in zip(locations_gdf.x, locations_gdf.y):
                 centroid_point = ee.Geometry.Point(lon, lat)
-                satellite_centroid_point = (
-                    self._get_centroid_value_from_collection(
-                        collection, centroid_point
-                    )
+                satellite_centroid_point = self._get_centroid_value_from_collection(
+                    collection, centroid_point
                 )
                 try:
-                    ee_df = ee_array_to_df(
-                        satellite_centroid_point, self.image_band
-                    )
+                    ee_df = ee_array_to_df(satellite_centroid_point, self.image_band)
                     if not ee_df.empty:
                         locations_ee_list.append(ee_df)
                 except IndexError:
@@ -119,16 +112,12 @@ class LoadEEData:
             if len(self.countries) == 1:
 
                 locations_ee_df = pd.concat(locations_ee_list)
-                locations_ee_df.to_csv(
-                    f"local_data/gee_data/{country[0]}_{self.model_name}.csv"
-                )
+                locations_ee_df.to_csv(f"local_data/gee_data/{country[0]}_{self.model_name}.csv")
                 return locations_ee_df
             else:
                 return pd.concat(locations_ee_list)
 
-    def save_images_to_drive(
-        self, collection, s_datetime, e_datetime, country
-    ):
+    def save_images_to_drive(self, collection, s_datetime, e_datetime, country):
         s_date = s_datetime.date()
         e_date = e_datetime.date()
         geemap.ee_export_image_collection(
@@ -160,9 +149,9 @@ class LoadEEData:
 
     def _get_xy(self, locations_gdf):
         try:
-            locations_gdf["centroid_geometry"] = locations_gdf[
-                "centroid_geometry"
-            ].map(shapely.wkt.loads)
+            locations_gdf["centroid_geometry"] = locations_gdf["centroid_geometry"].map(
+                shapely.wkt.loads
+            )
 
         except TypeError:
             pass

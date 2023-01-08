@@ -38,9 +38,7 @@ install_requires = [
 setup_kwargs = {
     "name": "open-geo-engine",
     "version": "0.1.2",
-    "entry_points": {
-        "console_scripts": ["open-geo-engine = open_geo_engine.__main__:main"]
-    },
+    "entry_points": {"console_scripts": ["open-geo-engine = open_geo_engine.__main__:main"]},
     "description": "",
     "long_description": None,
     "author": "ChristinaLast",

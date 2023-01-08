@@ -33,9 +33,7 @@ class GetGoogleStreetView:
         self.meta_base = meta_base
 
     @classmethod
-    def from_dataclass_config(
-        cls, streetview_config: StreetViewConfig
-    ) -> "GetGoogleStreetView":
+    def from_dataclass_config(cls, streetview_config: StreetViewConfig) -> "GetGoogleStreetView":
 
         return cls(
             size=streetview_config.SIZE,
@@ -73,12 +71,8 @@ class GetGoogleStreetView:
         )
 
     def generate_lat_lon_string(self, satellite_data_df):
-        satellite_lat_lon_unique = satellite_data_df[
-            ["latitude", "longitude"]
-        ].drop_duplicates()
-        satellite_lat_lon_unique["lat_lon_str"] = self._join_lat_lon(
-            satellite_lat_lon_unique
-        )
+        satellite_lat_lon_unique = satellite_data_df[["latitude", "longitude"]].drop_duplicates()
+        satellite_lat_lon_unique["lat_lon_str"] = self._join_lat_lon(satellite_lat_lon_unique)
         return ";".join(satellite_lat_lon_unique["lat_lon_str"])
 
     def get_google_streetview(self, params):
@@ -99,22 +93,16 @@ class GetGoogleStreetView:
         street_view_links_df["latitude"] = street_view_links_df["URL"].str.extract(
             "location=(.*)%2C"
         )
-        street_view_links_df["longitude"] = street_view_links_df["URL"].str.extract(
-            "%2C(.*)&pitch"
-        )
+        street_view_links_df["longitude"] = street_view_links_df["URL"].str.extract("%2C(.*)&pitch")
         street_view_links_df[["latitude", "longitude"]] = street_view_links_df[
             ["latitude", "longitude"]
         ].apply(pd.to_numeric, errors="coerce")
-        return satellite_data_df.merge(
-            street_view_links_df, on=["latitude", "longitude"]
-        )
+        return satellite_data_df.merge(street_view_links_df, on=["latitude", "longitude"])
 
     def add_metadata_to_satellite_df(self, satellite_data_df):
         for lat_lon in satellite_data_df["lat_lon_str"]:
             meta_params = {"key": self.key, "location": lat_lon}
-            satellite_data_df["metadata"] = str(
-                requests.get(self.meta_base, params=meta_params)
-            )
+            satellite_data_df["metadata"] = str(requests.get(self.meta_base, params=meta_params))
         return satellite_data_df
 
     def _join_lat_lon(self, satellite_data_df):

@@ -51,9 +51,7 @@ class GetGoogleStreetViewFlow:
     def execute_for_df(self, satellite_data_df):
         # Trigger the authentication flow.
         ee.Authenticate()
-        streetview_downloader = GetGoogleStreetView.from_dataclass_config(
-            self.streetview_config
-        )
+        streetview_downloader = GetGoogleStreetView.from_dataclass_config(self.streetview_config)
 
         return streetview_downloader.execute_for_df(satellite_data_df)
 
@@ -81,9 +79,7 @@ def get_google_streetview(satellite_data_df):
 @click.argument("path_to_local_data")
 def run_full_pipeline(path_to_local_data):
     building_footprint_gdf = GenerateBuildingCentroidsFlow().execute()
-    building_footprint_gdf.to_csv(
-        f"{path_to_local_data}/osm_data/building_footprint.csv"
-    )
+    building_footprint_gdf.to_csv(f"{path_to_local_data}/osm_data/building_footprint.csv")
 
     LoadDataFlow().execute(f"{path_to_local_data}/osm_data/building_footprint.csv")
     # GetGoogleStreetViewFlow().execute_for_df(satellite_data_df)

@@ -39,9 +39,7 @@ class DataConfig:
 
     LANDSAT_IMAGE_COLLECTION: str = "LANDSAT/LC08/C01/T1"
     MODEL_NAME = "GFS0P25"
-    LANDSAT_IMAGE_BAND: Sequence[str] = field(
-        default_factory=lambda: ["B4", "B3", "B2"]
-    )
+    LANDSAT_IMAGE_BAND: Sequence[str] = field(default_factory=lambda: ["B4", "B3", "B2"])
 
     AOD_IMAGE_COLLECTION: str = "MODIS/006/MCD19A2_GRANULES"
     AOD_IMAGE_BAND: Sequence[str] = field(default_factory=lambda: ["Optical_Depth_047"])
@@ -59,9 +57,7 @@ class DataConfig:
         ]
     )
 
-    POPULATION_IMAGE_COLLECTION: str = (
-        "CIESIN/GPWv411/GPW_Basic_Demographic_Characteristics"
-    )
+    POPULATION_IMAGE_COLLECTION: str = "CIESIN/GPWv411/GPW_Basic_Demographic_Characteristics"
     POPULATION_IMAGE_BAND = "basic_demographic_characteristics"
 
     LAND_COVER_IMAGE_COLLECTION: str = "COPERNICUS/Landcover/100m/Proba-V-C3/Global"
